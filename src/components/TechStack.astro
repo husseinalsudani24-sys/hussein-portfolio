@@ -1,0 +1,86 @@
+---
+import {
+  siGoogleads,
+  siMeta,
+  siGoogleanalytics,
+  siGooglesearchconsole,
+  siWordpress,
+  siNextdotjs,
+  siTypescript,
+  siTailwindcss,
+  siN8n,
+  siWhatsapp,
+  siAstro,
+  siClaude,
+} from "simple-icons";
+import { getTranslations, defaultLocale, type Locale } from "../i18n";
+
+const locale = (Astro.currentLocale ?? defaultLocale) as Locale;
+const t = getTranslations(locale);
+
+const tools = [
+  siGoogleads,
+  siMeta,
+  siGoogleanalytics,
+  siGooglesearchconsole,
+  siWordpress,
+  siNextdotjs,
+  siTypescript,
+  siTailwindcss,
+  siN8n,
+  siWhatsapp,
+  siAstro,
+  siClaude,
+];
+---
+
+<section id="tech-stack" class="section" data-reveal>
+  <div class="container">
+    <span class="section-tag">{t.techStack.tag}</span>
+    <h2>{t.techStack.heading}</h2>
+    <p class="section-intro">
+      {t.techStack.intro}
+    </p>
+
+    <div class="tech-stack-grid">
+      {tools.map((tool) => (
+        <div class="tech-stack-item">
+          <svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor" aria-hidden="true">
+            <path d={tool.path} />
+          </svg>
+          <span>{tool.title}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .tech-stack-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 20px;
+  }
+
+  /* Base glass surface, hover lift and animated border-glow are inherited
+     from the shared .tech-stack-item rules in global.css. */
+  .tech-stack-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    padding: 28px 16px;
+    color: var(--muted);
+    transition: color 0.35s;
+  }
+
+  .tech-stack-item:hover {
+    color: white;
+  }
+
+  .tech-stack-item span {
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-align: center;
+  }
+</style>

@@ -1,0 +1,128 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import Navbar from "../../../components/Navbar.astro";
+import Footer from "../../../components/Footer.astro";
+import ReadingProgress from "../../../components/ReadingProgress.astro";
+import { ArrowLeft } from "@lucide/astro";
+import { portfolio } from "../../../data/portfolio";
+import { getRelativeLocaleUrl } from "astro:i18n";
+import { getTranslations, defaultLocale, type Locale } from "../../../i18n";
+
+const locale = (Astro.currentLocale ?? defaultLocale) as Locale;
+const t = getTranslations(locale);
+const c = t.caseStudies["ai-automation"];
+const category = t.projectsData["ai-automation"].category;
+const pagePath = "/projects/ai-automation";
+const projectsHref = getRelativeLocaleUrl(locale, "projects");
+
+// The CV describes this project as ongoing and in development, not a
+// completed deployment: "Designing automated lead-capture workflows with
+// n8n, WhatsApp Business API, and Claude AI agents to cut manual
+// lead-qualification time for real estate clients. 2025 – Present." No
+// client count, accuracy figure or response-time metric exists for this
+// project, so none is stated.
+---
+
+<BaseLayout
+  title={`${c.metaTitle} | ${portfolio.personal.name}`}
+  description={c.metaDescription}
+  path={pagePath}
+>
+  <ReadingProgress />
+  <Navbar path={pagePath} />
+
+  <main id="main-content">
+    <section class="section case-hero">
+      <div class="case-hero-bg" aria-hidden="true"></div>
+
+      <div class="container case-hero-wrapper">
+        <a href={projectsHref} class="back-link">
+          <ArrowLeft size={16} stroke-width={2.5} aria-hidden="true" />
+          {t.caseStudy.backToProjects}
+        </a>
+
+        <span class="tag-badge">{category} &bull; {t.caseStudy.inDevelopment}</span>
+
+        <h1>{c.metaTitle}</h1>
+
+        <p class="lead">
+          {c.lead}
+        </p>
+
+        <dl class="hero-meta">
+          <div>
+            <dt>{t.caseStudy.statusLabel}</dt>
+            <dd>{t.caseStudy.inDevelopment}</dd>
+          </div>
+          <div>
+            <dt>{t.caseStudy.startedLabel}</dt>
+            <dd>{c.startedValue}</dd>
+          </div>
+          <div>
+            <dt>{t.caseStudy.focusLabel}</dt>
+            <dd>{c.focusValue}</dd>
+          </div>
+          <div>
+            <dt>{t.caseStudy.stackLabel}</dt>
+            <dd>{c.stackValue}</dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="section" data-reveal>
+      <div class="container">
+        <span class="section-tag">{t.caseStudy.overviewTag}</span>
+        <h2>{c.overviewHeading}</h2>
+        <p class="section-intro">
+          {c.overviewText}
+        </p>
+      </div>
+    </section>
+
+    <section class="section" data-reveal>
+      <div class="container">
+        <span class="section-tag">{c.goalsTag}</span>
+        <h2>{c.goalsHeading}</h2>
+        <ul class="role-list">
+          {c.goals.map((item) => (
+            <li>{item}</li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <section class="section" data-reveal>
+      <div class="container">
+        <span class="section-tag">{t.caseStudy.techStackTag}</span>
+        <h2>{t.caseStudy.technologiesHeading}</h2>
+        <div class="tech-grid">
+          {c.tools.map((tool) => (
+            <span class="tech-pill">{tool}</span>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section cta" data-reveal>
+      <div class="container">
+        <span class="section-tag">{t.caseStudy.nextStepTag}</span>
+        <h2>{c.ctaHeading}</h2>
+        <p>
+          {c.ctaText}
+        </p>
+        <div class="cta-buttons">
+          <a href={`mailto:${portfolio.personal.email}`} class="btn">{t.caseStudy.startConversation}</a>
+          <a href={projectsHref} class="btn-outline">{t.caseStudy.viewMoreCaseStudies}</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<script>
+  import { initPageAnimations } from "../../../scripts/animations";
+  initPageAnimations();
+</script>

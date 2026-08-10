@@ -1,0 +1,108 @@
+---
+import "../styles/global.css";
+import { ClientRouter } from "astro:transitions";
+import { getAbsoluteLocaleUrl } from "astro:i18n";
+import { portfolio } from "../data/portfolio";
+import { publicAssetExists } from "../utils/assets";
+import { locales, defaultLocale, isRtl, type Locale } from "../i18n";
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** Canonical path with no locale prefix, e.g. "/" or "/projects/cosmedent" — used to build hreflang alternates. */
+  path?: string;
+}
+
+const {
+  title = "Hussein Al Sudani | AI Automation Architect",
+  description = "AI Automation Architect, SEO Strategist and Performance Marketing specialist based in Dubai, UAE.",
+  path = "/",
+} = Astro.props;
+
+const locale = (Astro.currentLocale ?? defaultLocale) as Locale;
+const dir = isRtl(locale) ? "rtl" : "ltr";
+const ogLocaleMap: Record<Locale, string> = { en: "en_US", ar: "ar_AR", de: "de_DE" };
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const hasOgImage = publicAssetExists(portfolio.personal.ogImage);
+const ogImageURL = hasOgImage ? new URL(portfolio.personal.ogImage, Astro.site) : null;
+
+// hreflang alternates: one per locale, plus x-default pointing at English.
+const alternateLinks = locales.map((code) => ({
+  hrefLang: code,
+  href: getAbsoluteLocaleUrl(code, path === "/" ? "" : path.replace(/^\//, "")),
+}));
+
+const personSchema = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: portfolio.personal.name,
+  jobTitle: portfolio.personal.title,
+  url: portfolio.personal.website,
+  email: `mailto:${portfolio.personal.email}`,
+  telephone: portfolio.personal.phone,
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: portfolio.personal.location,
+  },
+  sameAs: [portfolio.personal.linkedin, portfolio.personal.github],
+  ...(ogImageURL ? { image: ogImageURL.toString() } : {}),
+};
+---
+
+<!DOCTYPE html>
+<html lang={locale} dir={dir}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#08080d" />
+    <link rel="canonical" href={canonicalURL} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    {alternateLinks.map(({ hrefLang, href }) => (
+      <link rel="alternate" hreflang={hrefLang} href={href} />
+    ))}
+    <link rel="alternate" hreflang="x-default" href={getAbsoluteLocaleUrl(defaultLocale, path === "/" ? "" : path.replace(/^\//, ""))} />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Bricolage+Grotesque:opsz,wght@12..96,400..800&display=swap"
+      rel="stylesheet"
+    />
+    {locale === "ar" && (
+      <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+      />
+    )}
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:site_name" content={portfolio.personal.name} />
+    <meta property="og:locale" content={ogLocaleMap[locale]} />
+    {locales
+      .filter((code) => code !== locale)
+      .map((code) => <meta property="og:locale:alternate" content={ogLocaleMap[code]} />)}
+    {ogImageURL && <meta property="og:image" content={ogImageURL} />}
+    <meta name="twitter:card" content={ogImageURL ? "summary_large_image" : "summary"} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {ogImageURL && <meta name="twitter:image" content={ogImageURL} />}
+
+    <script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
+
+    <title>{title}</title>
+
+    <ClientRouter />
+  </head>
+
+  <body>
+    <a href="#main-content" class="skip-link">Skip to content</a>
+    <div class="page-transition-overlay" aria-hidden="true" transition:persist="page-transition-overlay"></div>
+    <slot />
+  </body>
+</html>

@@ -1,0 +1,49 @@
+---
+import { getTranslations, defaultLocale, type Locale } from "../i18n";
+
+const locale = (Astro.currentLocale ?? defaultLocale) as Locale;
+const t = getTranslations(locale);
+---
+
+<section id="skills" class="section" data-reveal>
+
+  <div class="container">
+
+    <span class="section-tag">
+      {t.skills.tag}
+    </span>
+
+    <h2>
+      {t.skills.heading}
+    </h2>
+
+    <div class="skills-grid">
+
+      {t.skills.items.map((item) => (
+        <div class="skill-card">
+          <h3>{item.title}</h3>
+          <p>{item.description}</p>
+        </div>
+      ))}
+
+    </div>
+
+  </div>
+
+</section>
+
+<style>
+
+.skill-card h3{
+
+margin-bottom:14px;
+
+}
+
+.skill-card p{
+
+color:var(--muted);
+
+}
+
+</style>

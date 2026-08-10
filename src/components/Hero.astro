@@ -1,0 +1,772 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import { portfolio } from "../data/portfolio";
+import { publicAssetExists } from "../utils/assets";
+import { getTranslations, defaultLocale, type Locale } from "../i18n";
+import SocialLinks from "./SocialLinks.astro";
+import Portrait from "./Portrait.astro";
+
+const { personal } = portfolio;
+const hasCv = publicAssetExists(personal.cv);
+const locale = (Astro.currentLocale ?? defaultLocale) as Locale;
+const t = getTranslations(locale);
+const projectsUrl = getRelativeLocaleUrl(locale, "projects");
+
+// Cinematic background video — generated with Higgsfield (Cinema Studio 3.0),
+// post-processed into a seamless self-crossfade loop. Every asset is
+// optional-safe via publicAssetExists so a missing file degrades to the
+// poster frame (or, failing that, the plain scrim/grain) instead of a
+// broken <video> with nothing behind it.
+const hasWebm = publicAssetExists("/videos/hero-bg.webm");
+const hasMp4 = publicAssetExists("/videos/hero-bg.mp4");
+const hasVideo = hasWebm || hasMp4;
+const posterSrc = publicAssetExists("/images/hero-poster.webp") ? "/images/hero-poster.webp" : null;
+
+// First 4 real, verified clients (src/data/portfolio.ts) as a compact trust
+// row — same data FeaturedCompanies.astro uses further down the page, just
+// a terser presentation here since the hero already carries a lot of copy.
+const trustCompanies = portfolio.companies.slice(0, 4);
+---
+
+<section class="hero">
+
+  <div class="hero-bg" aria-hidden="true">
+    {hasVideo ? (
+      <video
+        class="hero-video"
+        poster={posterSrc ?? undefined}
+        muted
+        loop
+        playsinline
+        preload="none"
+      >
+        {hasWebm && <source src="/videos/hero-bg.webm" type="video/webm" />}
+        {hasMp4 && <source src="/videos/hero-bg.mp4" type="video/mp4" />}
+      </video>
+    ) : (
+      posterSrc && <img src={posterSrc} alt="" class="hero-poster-fallback" />
+    )}
+    <div class="hero-scrim"></div>
+    <div class="hero-glow"></div>
+    <div class="hero-grain"></div>
+    <div class="hero-particles">
+      <span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <div class="container hero-wrapper">
+
+    <div class="hero-grid">
+
+      <div class="hero-content">
+
+        <h1>{personal.name}</h1>
+
+        <h2 class="hero-roles">
+          {t.hero.roles.map((role) => <span>{role}</span>)}
+        </h2>
+
+        <p>
+          {t.hero.description}
+        </p>
+
+        <div class="hero-buttons">
+
+          <a href={projectsUrl} class="btn">
+            {t.hero.viewProjects}
+          </a>
+
+          {hasCv && (
+            <a href={personal.cv} class="btn-outline" download>
+              {t.hero.downloadCv}
+            </a>
+          )}
+
+          <a href="#contact" class="btn-outline">
+            {t.hero.contactMe}
+          </a>
+
+        </div>
+
+        <div class="hero-trust">
+          <span class="hero-trust-label">{t.companies.label}</span>
+          <div class="hero-trust-row">
+            {trustCompanies.map((company) => (
+              <span class="hero-trust-chip" title={company.role}>{company.name}</span>
+            ))}
+          </div>
+        </div>
+
+        <div class="hero-socials">
+          <SocialLinks iconSize={18} buttonSize={42} />
+        </div>
+
+      </div>
+
+      <div class="hero-visual">
+
+        <div class="hero-portrait-spotlight" aria-hidden="true"></div>
+
+        <div class="hero-portrait-card">
+          <div class="hero-portrait-frame-a" aria-hidden="true"></div>
+          <div class="hero-portrait-frame-b" aria-hidden="true"></div>
+          <Portrait size="clamp(280px, 30vw, 440px)" class="hero-portrait" eager />
+        </div>
+
+        <div class="hero-stats" role="group" aria-label={t.hero.statYears}>
+
+          <div class="hero-float-card hero-float-card-years">
+            <strong class="count-up" data-count-to="4" data-suffix="+">0</strong>
+            <span>{t.hero.statYears}</span>
+          </div>
+
+          <div class="hero-float-card hero-float-card-projects">
+            <strong class="count-up" data-count-to="30" data-suffix="+">0</strong>
+            <span>{t.hero.statProjects}</span>
+          </div>
+
+          <div class="hero-float-card hero-float-card-automations">
+            <strong class="count-up" data-count-to="100" data-suffix="+">0</strong>
+            <span>{t.hero.statAutomations}</span>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="scroll-cue" aria-hidden="true">
+    <span class="scroll-cue-dot"></span>
+  </div>
+
+</section>
+
+<style>
+.hero{
+    position:relative;
+    min-height:100vh;
+    min-height:100dvh;
+    display:flex;
+    align-items:center;
+    justify-content:flex-start;
+    overflow:hidden;
+    text-align:left;
+    padding-block:128px 72px;
+}
+
+/* ==========================================
+   CINEMATIC BACKGROUND STACK
+   z-order: video/poster -> scrim -> glow -> grain -> particles -> content
+========================================== */
+
+.hero-bg{
+    position:absolute;
+    inset:0;
+    overflow:hidden;
+    background:#08080d;
+    /* No transform of its own: initHeroParallax (animations.ts) drives a
+       scroll-scrubbed yPercent tween on this exact element, and a CSS
+       @keyframes animation touching the same `transform` property here
+       would fight GSAP's per-frame writes to it — the same class of
+       conflict already documented for .btn/.btn-outline's transitions
+       elsewhere in this codebase. The breathing scale below lives one
+       level down, on .hero-video, instead. */
+}
+
+/* `--hero-scale` is a registered custom property (like --border-angle in
+   global.css) so the browser can smoothly interpolate its <number> value
+   through @keyframes. That's what lets the breathing scale and the RTL
+   mirror below compose into one `transform` value without either
+   overwriting the other — animating only `--hero-scale` recomputes
+   `transform` each frame from both custom properties at once. */
+@property --hero-scale{
+    syntax:'<number>';
+    inherits:false;
+    initial-value:1.06;
+}
+
+.hero-video,
+.hero-poster-fallback{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position:center;
+    --hero-flip:1;
+    transform:scale(var(--hero-scale)) scaleX(var(--hero-flip));
+    animation:hero-bg-breathe 26s ease-in-out infinite;
+}
+
+@keyframes hero-bg-breathe{
+    0%,100%{ --hero-scale:1.06; }
+    50%{ --hero-scale:1.12; }
+}
+
+/* The generated footage keeps its dark negative space on the physical left
+   and its luminous light-trails on the physical right — composed that way
+   deliberately, since the portrait now sits on the right: the trails read
+   as energy the "architect" is commanding, not just decoration. Under
+   dir="rtl" both the text and portrait columns mirror (see .hero-grid
+   below), so the footage mirrors with them, keeping the same relationship
+   between text/dark-space and portrait/light-trails either direction. */
+:global([dir="rtl"]) .hero-video,
+:global([dir="rtl"]) .hero-poster-fallback{
+    --hero-flip:-1;
+}
+
+.hero-scrim{
+    position:absolute;
+    inset:0;
+    background:
+      linear-gradient(to right, rgba(6,6,12,.94) 0%, rgba(6,6,12,.68) 36%, rgba(6,6,12,.22) 58%, rgba(6,6,12,.4) 100%),
+      linear-gradient(to top, rgba(6,6,12,.88) 0%, rgba(6,6,12,.08) 32%, transparent 55%),
+      radial-gradient(ellipse 90% 70% at 50% 50%, transparent 55%, rgba(0,0,0,.4) 100%);
+}
+
+:global([dir="rtl"]) .hero-scrim{
+    background:
+      linear-gradient(to left, rgba(6,6,12,.94) 0%, rgba(6,6,12,.68) 36%, rgba(6,6,12,.22) 58%, rgba(6,6,12,.4) 100%),
+      linear-gradient(to top, rgba(6,6,12,.88) 0%, rgba(6,6,12,.08) 32%, transparent 55%),
+      radial-gradient(ellipse 90% 70% at 50% 50%, transparent 55%, rgba(0,0,0,.4) 100%);
+}
+
+/* Mouse-reactive spotlight — a soft colored glow whose position is driven
+   by --glow-x/--glow-y custom properties (initHeroGlow, animations.ts, via
+   GSAP quickTo so it eases rather than snapping frame-to-frame). Desktop
+   fine-pointer only and skipped entirely under reduced motion; the static
+   default position below (upper-right, near the portrait) is what every
+   other context — touch, reduced motion, JS-disabled — permanently sees. */
+.hero-glow{
+    position:absolute;
+    inset:0;
+    /* Unitless numbers (0-100), not percentages: initHeroGlow (animations.ts)
+       tweens these via GSAP quickTo, whose TS typings infer `number` for a
+       bare custom-property key — the "%" is applied here via calc() at the
+       point of use instead of baked into the stored value. */
+    --glow-x:72;
+    --glow-y:38;
+    background:radial-gradient(circle at calc(var(--glow-x) * 1%) calc(var(--glow-y) * 1%), rgba(139,92,246,.22), transparent 32%);
+    mix-blend-mode:screen;
+    pointer-events:none;
+}
+
+/* Cinematic film-grain texture — a tiled fractal-noise SVG blended over the
+   footage. Static (no animation): the point is a permanent fine-grain
+   quality cue, not a moving effect, so it costs nothing extra and needs no
+   reduced-motion handling. */
+.hero-grain{
+    position:absolute;
+    inset:0;
+    opacity:.05;
+    mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size:120px 120px;
+    pointer-events:none;
+}
+
+/* Foreground dust motes — a cheap, purposeful depth layer independent of
+   the video (parallax cue), animated in initHeroParticles (animations.ts).
+   Static (opacity only, no motion) under reduced motion via that same JS
+   gate, matching the rest of the hero's motion-respecting pattern. */
+.hero-particles{
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+}
+
+.hero-particles span{
+    position:absolute;
+    border-radius:50%;
+    filter:blur(1px);
+    background:radial-gradient(circle, rgba(139,92,246,.9), rgba(139,92,246,0) 70%);
+    opacity:.5;
+}
+
+.hero-particles span:nth-child(1){ top:18%; left:62%; width:6px; height:6px; }
+.hero-particles span:nth-child(2){ top:32%; left:78%; width:4px; height:4px; background:radial-gradient(circle, rgba(6,182,212,.9), rgba(6,182,212,0) 70%); }
+.hero-particles span:nth-child(3){ top:58%; left:70%; width:8px; height:8px; }
+.hero-particles span:nth-child(4){ top:70%; left:88%; width:5px; height:5px; background:radial-gradient(circle, rgba(6,182,212,.85), rgba(6,182,212,0) 70%); }
+.hero-particles span:nth-child(5){ top:44%; left:92%; width:4px; height:4px; }
+.hero-particles span:nth-child(6){ top:82%; left:58%; width:6px; height:6px; background:radial-gradient(circle, rgba(6,182,212,.8), rgba(6,182,212,0) 70%); }
+
+:global([dir="rtl"]) .hero-particles span{ left:auto; }
+:global([dir="rtl"]) .hero-particles span:nth-child(1){ right:62%; }
+:global([dir="rtl"]) .hero-particles span:nth-child(2){ right:78%; }
+:global([dir="rtl"]) .hero-particles span:nth-child(3){ right:70%; }
+:global([dir="rtl"]) .hero-particles span:nth-child(4){ right:88%; }
+:global([dir="rtl"]) .hero-particles span:nth-child(5){ right:92%; }
+:global([dir="rtl"]) .hero-particles span:nth-child(6){ right:58%; }
+
+/* ==========================================
+   CONTENT GRID
+========================================== */
+
+/* No width here: this element already carries the shared .container class
+   (width:min(var(--container),92%); margin-inline:auto — global.css),
+   which must win undisturbed for the content to stay centered/gutter-safe
+   instead of pinning flush to the viewport's physical edge. */
+.hero-wrapper{
+    position:relative;
+    z-index:2;
+}
+
+.hero-grid{
+    display:grid;
+    grid-template-columns:1fr;
+    align-items:center;
+    gap:64px;
+}
+
+.hero-content{
+    max-width:680px;
+}
+
+.hero h1{
+    font-size:clamp(3.5rem, 7.5vw, 6.75rem);
+    line-height:.97;
+    letter-spacing:-.04em;
+    margin-bottom:var(--space-6, 24px);
+}
+
+.hero-roles{
+    position:relative;
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    column-gap:14px;
+    row-gap:6px;
+    padding-inline-start:20px;
+    margin-bottom:var(--space-8, 32px);
+    color:var(--muted);
+    font-size:clamp(1rem, 1.6vw, 1.25rem);
+    font-weight:600;
+    letter-spacing:.01em;
+}
+
+.hero-roles::before{
+    content:"";
+    position:absolute;
+    inset-inline-start:0;
+    top:50%;
+    width:12px;
+    height:2px;
+    background:var(--primary);
+    transform:translateY(-50%);
+}
+
+.hero-roles span{ color:var(--text); }
+
+.hero-roles span:not(:last-child)::after{
+    content:"/";
+    margin-inline-start:14px;
+    color:var(--border-strong);
+    font-weight:400;
+}
+
+.hero p{
+    max-width:520px;
+    margin:0 0 var(--space-11, 44px);
+    font-size:1.1rem;
+    line-height:1.7;
+}
+
+.hero-buttons{
+    display:flex;
+    align-items:center;
+    gap:var(--space-4, 18px);
+    flex-wrap:wrap;
+    margin-bottom:var(--space-12, 48px);
+}
+
+/* Scoped to the hero only — .btn/.btn-outline themselves stay untouched in
+   global.css, so every other CTA sitewide (nav, footer, case studies) is
+   unaffected. The shine sweep is a premium micro-interaction layered on
+   top of the existing hover-lift, not a replacement for it. */
+.hero-buttons .btn,
+.hero-buttons .btn-outline{
+    position:relative;
+    overflow:hidden;
+}
+
+.hero-buttons .btn::before,
+.hero-buttons .btn-outline::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(115deg, transparent 30%, rgba(255,255,255,.25) 50%, transparent 70%);
+    transform:translateX(-120%);
+    transition:transform .7s ease;
+    pointer-events:none;
+}
+
+.hero-buttons .btn:hover::before,
+.hero-buttons .btn-outline:hover::before{
+    transform:translateX(120%);
+}
+
+/* Primary-action emphasis: a soft resting glow under "View Projects" so
+   it reads unmistakably as the one primary CTA at a glance, with the two
+   secondary actions staying visually quieter — hierarchy through weight,
+   not extra copy or a removed button. */
+.hero-buttons .btn{
+    box-shadow:0 12px 32px -8px rgba(139,92,246,.55);
+}
+
+.hero-trust{
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    margin-bottom:var(--space-8, 32px);
+    padding-top:var(--space-7, 28px);
+    max-width:520px;
+}
+
+/* A short accent rule instead of a full-width border-top — the same
+   "signature dash" language as .hero-roles::before, so the trust section
+   reads as a deliberate editorial break rather than a generic form-style
+   section divider. */
+.hero-trust::before{
+    content:"";
+    position:absolute;
+    top:0;
+    inset-inline-start:0;
+    width:40px;
+    height:2px;
+    background:var(--primary);
+}
+
+.hero-trust-label{
+    font-size:.7rem;
+    color:var(--muted);
+    text-transform:uppercase;
+    letter-spacing:.1em;
+    font-weight:600;
+}
+
+.hero-trust-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px 10px;
+}
+
+.hero-trust-chip{
+    font-size:.82rem;
+    font-weight:600;
+    color:var(--muted);
+    padding:5px 12px;
+    border-radius:999px;
+    border:1px solid var(--border);
+    background:rgba(255,255,255,.02);
+    white-space:nowrap;
+}
+
+.hero-socials{
+    display:flex;
+    gap:12px;
+}
+
+/* ==========================================
+   VISUAL COLUMN — dominant portrait + floating glass stats
+========================================== */
+
+.hero-visual{
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:420px;
+}
+
+/* Stage-light glow behind the portrait — the busy background footage
+   otherwise competes with the portrait for attention at roughly equal
+   brightness; this darkens/simplifies the immediate surrounding area with
+   a soft violet falloff so the portrait reads unambiguously as the focal
+   point rather than one bright shape among several. */
+.hero-portrait-spotlight{
+    position:absolute;
+    inset:0;
+    margin:auto;
+    width:130%;
+    height:130%;
+    max-width:640px;
+    max-height:640px;
+    background:radial-gradient(circle, rgba(139,92,246,.32) 0%, rgba(79,70,229,.14) 40%, transparent 70%);
+    filter:blur(30px);
+    z-index:0;
+    pointer-events:none;
+}
+
+.hero-portrait-card{
+    position:relative;
+    z-index:2;
+    /* transformPerspective for initMouseParallax's 3D tilt on this element —
+       set once here rather than by GSAP, so the very first tween frame
+       already has perspective instead of the tilt "popping in" flat. */
+    transform-style:preserve-3d;
+    perspective:1000px;
+}
+
+/* Two offset glass "cards" behind the portrait — the decorative floating
+   glass objects the brief calls for, independent of the functional stat
+   cards. Purely visual, aria-hidden. */
+.hero-portrait-frame-a,
+.hero-portrait-frame-b{
+    position:absolute;
+    inset:0;
+    margin:auto;
+    width:88%;
+    height:88%;
+    border-radius:32px;
+    border:1px solid var(--glass-border);
+    background:var(--glass-bg);
+    backdrop-filter:var(--glass-blur);
+    -webkit-backdrop-filter:var(--glass-blur);
+    z-index:-1;
+}
+
+.hero-portrait-frame-a{
+    transform:rotate(-8deg) scale(1.08);
+    box-shadow:0 30px 80px rgba(139,92,246,.15);
+}
+
+.hero-portrait-frame-b{
+    transform:rotate(6deg) scale(1.14);
+    opacity:.6;
+}
+
+.hero-visual :global(.hero-portrait){
+    display:block;
+    margin-inline:auto;
+}
+
+/* Glass stat cards — same glassmorphism language as the portrait frames. On desktop
+   (≥900px, see media query below) they're absolutely positioned and orbit
+   the portrait with a slow independent bob (initHeroFloatCards,
+   animations.ts). Below 900px there's no safe room to bleed a card past
+   the visual column's edge without either clipping its own text or
+   forcing real page-level horizontal scroll (both reproduced and fixed
+   here — see PROJECT decisions below), so .hero-stats switches to a
+   plain static flex row instead of floating; initHeroFloatCards checks
+   viewport width and simply doesn't start the bob tween in that case.
+   Counters via initCountUp (shared sitewide mechanism) work identically
+   either way since they only target the unchanged `.count-up` elements. */
+.hero-stats{
+    position:absolute;
+    inset:0;
+    z-index:3;
+    pointer-events:none;
+}
+
+.hero-float-card{
+    position:absolute;
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+    padding:14px 18px;
+    border-radius:16px;
+    background:var(--glass-bg);
+    backdrop-filter:var(--glass-blur);
+    -webkit-backdrop-filter:var(--glass-blur);
+    border:1px solid var(--glass-border);
+    box-shadow:var(--shadow-hover);
+    text-align:left;
+    pointer-events:auto;
+    will-change:transform;
+}
+
+.hero-float-card strong{
+    font-family:var(--font-display);
+    font-size:1.3rem;
+    font-weight:800;
+    color:white;
+    letter-spacing:-.02em;
+}
+
+.hero-float-card span{
+    font-size:.7rem;
+    color:var(--muted);
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    white-space:nowrap;
+}
+
+.scroll-cue{
+    position:absolute;
+    left:50%;
+    bottom:36px;
+    z-index:2;
+    width:26px;
+    height:42px;
+    border:2px solid var(--border-strong);
+    border-radius:999px;
+    transform:translateX(-50%);
+}
+
+.scroll-cue-dot{
+    position:absolute;
+    top:8px;
+    left:50%;
+    width:4px;
+    height:8px;
+    border-radius:999px;
+    background:var(--primary);
+    transform:translateX(-50%);
+    animation:scroll-cue-move 1.8s ease-in-out infinite;
+}
+
+@keyframes scroll-cue-move{
+    0%{ opacity:1; transform:translate(-50%,0); }
+    70%{ opacity:0; transform:translate(-50%,14px); }
+    100%{ opacity:0; transform:translate(-50%,14px); }
+}
+
+@media(max-width:768px), (max-height:700px){
+    .scroll-cue{ display:none; }
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media(min-width:900px){
+
+    .hero-grid{
+        grid-template-columns:1.05fr .95fr;
+        gap:48px;
+    }
+
+    /* Orbiting floating layout — only viable with the generous horizontal
+       room a two-column desktop grid provides. Percentage offsets are
+       relative to .hero-visual, which is wide enough here that a card
+       bleeding slightly past its edge still lands safely inside the
+       page's own gutter (see .container in global.css), never the
+       viewport edge itself. */
+    .hero-float-card-years{ top:2%; left:-6%; }
+    .hero-float-card-projects{ bottom:12%; right:-8%; }
+    .hero-float-card-automations{ bottom:-4%; left:6%; }
+
+    :global([dir="rtl"]) .hero-float-card-years{ left:auto; right:-6%; }
+    :global([dir="rtl"]) .hero-float-card-projects{ right:auto; left:-8%; }
+    :global([dir="rtl"]) .hero-float-card-automations{ left:auto; right:6%; }
+
+}
+
+@media(max-width:899px){
+
+    .hero{
+        justify-content:center;
+        text-align:center;
+        padding-block:140px 56px;
+    }
+
+    .hero-grid{
+        gap:44px;
+    }
+
+    /* Portrait first on mobile too — it stays the dominant element at
+       every breakpoint rather than only on desktop. */
+    .hero-visual{
+        order:-1;
+        min-height:auto;
+        flex-direction:column;
+        gap:24px;
+    }
+
+    /* The same three cards that float around the portrait on desktop
+       become a plain, safely-contained row underneath it here — no
+       negative percentage offsets, so nothing can bleed past the
+       viewport edge (the bug this replaces: at narrow widths those same
+       offsets used to clip the cards' own text and, at ~320px, force
+       real horizontal page scroll). initHeroFloatCards (animations.ts)
+       checks viewport width and skips the bob tween in this layout. */
+    .hero-stats{
+        position:static;
+        display:flex;
+        justify-content:center;
+        flex-wrap:wrap;
+        gap:12px;
+        pointer-events:auto;
+    }
+
+    .hero-float-card{
+        position:static;
+        align-items:center;
+        text-align:center;
+        padding:12px 16px;
+        min-width:84px;
+    }
+
+    .hero-content{
+        max-width:640px;
+        margin-inline:auto;
+    }
+
+    .hero-roles{
+        justify-content:center;
+        padding-inline-start:0;
+    }
+
+    .hero-roles::before{
+        display:none;
+    }
+
+    .hero p{
+        margin-inline:auto;
+    }
+
+    .hero-buttons{
+        justify-content:center;
+    }
+
+    .hero-trust{
+        align-items:center;
+        margin-inline:auto;
+    }
+
+    .hero-trust::before{
+        inset-inline-start:50%;
+        transform:translateX(-50%);
+    }
+
+    :global([dir="rtl"]) .hero-trust::before{
+        transform:translateX(50%);
+    }
+
+    .hero-trust-row{
+        justify-content:center;
+    }
+
+    .hero-socials{
+        justify-content:center;
+    }
+
+}
+
+@media(max-width:420px){
+
+    .hero-float-card{
+        padding:10px 14px;
+        min-width:72px;
+    }
+
+    .hero-float-card strong{
+        font-size:1.05rem;
+    }
+
+}
+
+:global([dir="rtl"]) .hero{
+    text-align:right;
+}
+
+@media(max-width:899px){
+    :global([dir="rtl"]) .hero{
+        text-align:center;
+    }
+}
+</style>

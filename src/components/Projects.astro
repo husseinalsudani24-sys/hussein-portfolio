@@ -1,0 +1,22 @@
+---
+import ProjectCard from "./ProjectCard.astro";
+import { portfolio } from "../data/portfolio";
+import { getTranslations, defaultLocale, type Locale } from "../i18n";
+
+const locale = (Astro.currentLocale ?? defaultLocale) as Locale;
+const t = getTranslations(locale);
+---
+
+<section id="projects" class="section" data-reveal>
+  <div class="container">
+    <span class="section-tag">{t.projectsSection.tag}</span>
+
+    <h2>{t.projectsSection.heading}</h2>
+
+    <div class="projects-grid">
+      {portfolio.projects.map((project) => (
+        <ProjectCard {...project} {...t.projectsData[project.slug as keyof typeof t.projectsData]} />
+      ))}
+    </div>
+  </div>
+</section>

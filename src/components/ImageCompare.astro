@@ -1,0 +1,192 @@
+---
+/**
+ * Reusable before/after drag-slider. Not used anywhere yet — no real
+ * "before" screenshots exist for any case study (galleries are still
+ * gradient placeholders; see each case study's own comment on that).
+ * Ready to drop in the moment real before/after assets exist:
+ *
+ *   <ImageCompare
+ *     beforeSrc="/images/cosmedent-before.jpg"
+ *     afterSrc="/images/cosmedent-after.jpg"
+ *     beforeLabel="Before"
+ *     afterLabel="After"
+ *   />
+ */
+interface Props {
+  beforeSrc: string;
+  afterSrc: string;
+  beforeLabel?: string;
+  afterLabel?: string;
+  alt: string;
+}
+
+const { beforeSrc, afterSrc, beforeLabel = "Before", afterLabel = "After", alt } = Astro.props;
+---
+
+<div class="image-compare" data-image-compare>
+  <img class="image-compare-after" src={afterSrc} alt={`${alt} — after`} loading="lazy" decoding="async" />
+  <div class="image-compare-before-wrap">
+    <img class="image-compare-before" src={beforeSrc} alt={`${alt} — before`} loading="lazy" decoding="async" />
+  </div>
+
+  <span class="image-compare-tag image-compare-tag-before">{beforeLabel}</span>
+  <span class="image-compare-tag image-compare-tag-after">{afterLabel}</span>
+
+  <div class="image-compare-handle" role="slider" tabindex="0" aria-label={`Comparison slider for ${alt}`} aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
+    <span class="image-compare-handle-grip"></span>
+  </div>
+</div>
+
+<style>
+  .image-compare {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    user-select: none;
+    cursor: ew-resize;
+  }
+
+  .image-compare-after,
+  .image-compare-before {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    pointer-events: none;
+  }
+
+  .image-compare-before-wrap {
+    position: absolute;
+    inset: 0;
+    width: 50%;
+    overflow: hidden;
+  }
+
+  .image-compare-before {
+    width: var(--compare-image-width, 100vw);
+    max-width: none;
+  }
+
+  .image-compare-tag {
+    position: absolute;
+    top: 16px;
+    z-index: 2;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: rgba(8, 8, 13, 0.55);
+    backdrop-filter: blur(8px) saturate(160%);
+    -webkit-backdrop-filter: blur(8px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: white;
+    font-size: 0.78rem;
+    font-weight: 600;
+  }
+
+  .image-compare-tag-before {
+    left: 16px;
+  }
+
+  .image-compare-tag-after {
+    right: 16px;
+  }
+
+  .image-compare-handle {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 3px;
+    background: white;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2);
+  }
+
+  .image-compare-handle:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 4px;
+  }
+
+  .image-compare-handle-grip {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-hover);
+  }
+
+  .image-compare-handle-grip::before {
+    content: "";
+    width: 14px;
+    height: 14px;
+    border-left: 2px solid var(--bg);
+    border-right: 2px solid var(--bg);
+  }
+</style>
+
+<script>
+  // Scoped to this component's markup via a shared class, so a single
+  // listener setup handles every instance on the page. Re-bound on every
+  // astro:page-load (data-astro-rerun) since Astro's DOM swap replaces the
+  // elements each navigation.
+  function initImageCompare() {
+    document.querySelectorAll<HTMLElement>("[data-image-compare]").forEach((root) => {
+      const handle = root.querySelector<HTMLElement>(".image-compare-handle");
+      const beforeWrap = root.querySelector<HTMLElement>(".image-compare-before-wrap");
+      const beforeImg = root.querySelector<HTMLElement>(".image-compare-before");
+      if (!handle || !beforeWrap || !beforeImg || root.dataset.compareBound) return;
+      root.dataset.compareBound = "true";
+
+      const setPosition = (ratio: number) => {
+        const clamped = Math.min(1, Math.max(0, ratio));
+        const percent = clamped * 100;
+        beforeWrap.style.width = `${percent}%`;
+        handle.style.left = `${percent}%`;
+        beforeImg.style.setProperty("--compare-image-width", `${root.clientWidth}px`);
+        handle.setAttribute("aria-valuenow", String(Math.round(percent)));
+      };
+
+      const ratioFromClientX = (clientX: number) => {
+        const rect = root.getBoundingClientRect();
+        return (clientX - rect.left) / rect.width;
+      };
+
+      let dragging = false;
+      const onPointerDown = (event: PointerEvent) => {
+        dragging = true;
+        handle.setPointerCapture(event.pointerId);
+        setPosition(ratioFromClientX(event.clientX));
+      };
+      const onPointerMove = (event: PointerEvent) => {
+        if (!dragging) return;
+        setPosition(ratioFromClientX(event.clientX));
+      };
+      const onPointerUp = () => {
+        dragging = false;
+      };
+      const onKeyDown = (event: KeyboardEvent) => {
+        const current = Number(handle.getAttribute("aria-valuenow") ?? 50) / 100;
+        if (event.key === "ArrowLeft") setPosition(current - 0.05);
+        if (event.key === "ArrowRight") setPosition(current + 0.05);
+      };
+
+      root.addEventListener("pointerdown", onPointerDown);
+      window.addEventListener("pointermove", onPointerMove);
+      window.addEventListener("pointerup", onPointerUp);
+      handle.addEventListener("keydown", onKeyDown);
+
+      setPosition(0.5);
+    });
+  }
+
+  document.addEventListener("astro:page-load", initImageCompare);
+</script>

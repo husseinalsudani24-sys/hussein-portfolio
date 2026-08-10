@@ -1,0 +1,99 @@
+---
+import { getRelativeLocaleUrl } from "astro:i18n";
+import { locales, localeNames, defaultLocale, getTranslations, type Locale } from "../i18n";
+
+interface Props {
+  /** Canonical path with no locale prefix, e.g. "/" or "/projects/cosmedent" — preserves the current page across languages. */
+  path?: string;
+}
+
+const { path = "/" } = Astro.props;
+const currentLocale = (Astro.currentLocale ?? defaultLocale) as Locale;
+const t = getTranslations(currentLocale);
+const relPath = path === "/" ? "" : path.replace(/^\//, "");
+const activeIndex = Math.max(0, locales.indexOf(currentLocale));
+---
+
+<div
+  class="lang-switcher"
+  role="group"
+  aria-label={t.languageSwitcher.label}
+  style={`--count:${locales.length};--active-index:${activeIndex};`}
+>
+  <span class="lang-switcher-thumb" aria-hidden="true"></span>
+  {locales.map((code) => (
+    <a
+      href={getRelativeLocaleUrl(code, relPath)}
+      class="lang-link"
+      aria-current={code === currentLocale ? "true" : undefined}
+      data-astro-reload
+    >
+      {localeNames[code]}
+    </a>
+  ))}
+</div>
+
+<style>
+  /* Premium segmented control: a single sliding pill (the "thumb") sits
+     behind whichever locale is current, positioned purely with CSS via
+     --active-index — no JS measurement needed since every segment is an
+     equal 1/--count share of the track. */
+  .lang-switcher {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(var(--count), 1fr);
+    padding: 4px;
+    border-radius: 999px;
+    border: 1px solid var(--glass-border);
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+  }
+
+  .lang-switcher-thumb {
+    position: absolute;
+    inset-block: 4px;
+    inset-inline-start: 4px;
+    width: calc((100% - 8px) / var(--count));
+    border-radius: 999px;
+    /* --primary-hover, not --primary: the active label text sits directly
+       on this fill at ~12.5px bold, where --primary alone is only ~4.2:1
+       against white — short of WCAG AA's 4.5:1. --primary-hover clears it
+       (~5.7:1). */
+    background: var(--primary-hover);
+    box-shadow: 0 4px 14px rgba(139, 92, 246, 0.4);
+    transform: translateX(calc(var(--active-index) * 100%));
+    transition: transform 0.45s cubic-bezier(0.65, 0, 0.35, 1);
+    z-index: 0;
+  }
+
+  /* :global() on the ancestor: Astro's scoped-CSS otherwise appends this
+     component's scope attribute to [dir="rtl"] as well, and since <html>
+     (where dir actually lives) never carries that attribute, the rule
+     would silently never match. */
+  :global([dir="rtl"]) .lang-switcher-thumb {
+    transform: translateX(calc(var(--active-index) * -100%));
+  }
+
+  .lang-link {
+    position: relative;
+    z-index: 1;
+    padding: 6px 12px;
+    border-radius: 999px;
+    text-align: center;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.25s ease;
+  }
+
+  .lang-link:hover {
+    color: white;
+  }
+
+  .lang-link[aria-current="true"] {
+    color: white;
+  }
+</style>

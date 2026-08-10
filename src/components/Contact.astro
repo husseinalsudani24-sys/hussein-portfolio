@@ -1,0 +1,106 @@
+---
+import { portfolio } from "../data/portfolio";
+import { publicAssetExists } from "../utils/assets";
+import { getTranslations, defaultLocale, type Locale } from "../i18n";
+import Portrait from "./Portrait.astro";
+
+const { personal } = portfolio;
+const hasCv = publicAssetExists(personal.cv);
+const locale = (Astro.currentLocale ?? defaultLocale) as Locale;
+const t = getTranslations(locale);
+---
+
+<section id="contact" class="section cta" data-reveal>
+
+  <div class="container contact">
+
+    <Portrait size="96px" class="contact-portrait" />
+
+    <span class="section-tag">
+      {t.contact.tag}
+    </span>
+
+    <h2>
+      {t.contact.heading}
+    </h2>
+
+    <p>
+      {t.contact.description}
+    </p>
+
+    <div class="contact-buttons">
+
+      <a
+        href={`mailto:${personal.email}`}
+        class="btn">
+        {t.contact.emailMe}
+      </a>
+
+      <a
+        href={`tel:${personal.phone}`}
+        class="btn-outline">
+        {t.contact.callMe}
+      </a>
+
+      <a
+        href={personal.linkedin}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="btn-outline">
+        {t.contact.linkedin}
+      </a>
+
+      {hasCv && (
+        <a
+          href={personal.cv}
+          class="btn-outline"
+          download>
+          {t.contact.downloadCv}
+        </a>
+      )}
+
+    </div>
+
+  </div>
+
+</section>
+
+<style>
+
+.contact{
+
+text-align:center;
+
+max-width:900px;
+
+margin:auto;
+
+}
+
+.contact :global(.contact-portrait){
+
+margin:0 auto 24px;
+
+}
+
+.contact p{
+
+max-width:700px;
+
+margin:24px auto 40px;
+
+}
+
+.contact-buttons{
+
+display:flex;
+
+justify-content:center;
+
+gap:18px;
+
+flex-wrap:wrap;
+
+}
+
+</style>

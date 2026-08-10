@@ -1,0 +1,78 @@
+---
+import { portfolio } from "../data/portfolio";
+import { getTranslations, defaultLocale, type Locale } from "../i18n";
+
+const locale = (Astro.currentLocale ?? defaultLocale) as Locale;
+const t = getTranslations(locale);
+---
+
+<section class="companies-section" data-reveal>
+  <div class="container">
+    <p class="companies-label">{t.companies.label}</p>
+    <div class="companies-row">
+      {portfolio.companies.map((company, i) => (
+        <span class="company-wordmark" title={t.companies.roles[i]}>{company.name}</span>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .companies-section {
+    padding: 56px 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .companies-label {
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 32px;
+  }
+
+  .companies-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 20px 44px;
+  }
+
+  .company-wordmark {
+    color: var(--muted);
+    font-weight: 700;
+    font-size: 1.05rem;
+    letter-spacing: 0.01em;
+    opacity: 0.7;
+    filter: grayscale(1);
+    /* opacity intentionally excluded: the scroll-reveal system (see
+       initScrollReveal in animations.ts) animates this element's opacity
+       on entrance, and a CSS transition on the same property fights GSAP's
+       per-frame writes to it — GSAP ends up capturing a mid-transition
+       value as its "to" target instead of the true resting 0.7, so the
+       element gets stuck invisible. Same root cause as the documented
+       transition-vs-GSAP conflict elsewhere in this codebase, just via an
+       explicitly-listed property instead of an "all" shorthand. */
+    transition: filter 0.3s, color 0.3s;
+    cursor: default;
+  }
+
+  .company-wordmark:hover {
+    opacity: 1;
+    filter: grayscale(0);
+    color: white;
+  }
+
+  @media (max-width: 640px) {
+    .companies-row {
+      gap: 16px 28px;
+    }
+
+    .company-wordmark {
+      font-size: 0.95rem;
+    }
+  }
+</style>

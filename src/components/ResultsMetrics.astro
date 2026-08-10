@@ -1,0 +1,110 @@
+---
+import { portfolio } from "../data/portfolio";
+import { getTranslations, defaultLocale, type Locale } from "../i18n";
+
+const locale = (Astro.currentLocale ?? defaultLocale) as Locale;
+const t = getTranslations(locale);
+
+// r=48 in a 112x112 viewBox — circumference feeds the ring's stroke-dasharray
+// in the scoped <style> below and the animated draw-in in animations.ts.
+const RING_RADIUS = 48;
+const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
+---
+
+<section id="results" class="section" data-reveal>
+  <div class="container">
+    <span class="section-tag">{t.results.tag}</span>
+    <h2>{t.results.heading}</h2>
+    <p class="section-intro">
+      {t.results.intro}
+    </p>
+
+    <div class="results-grid">
+      {portfolio.results.map((stat, i) => (
+        <div class="result-card">
+          <div class="result-ring-wrap">
+            <svg class="result-ring" viewBox="0 0 112 112" aria-hidden="true">
+              <circle class="result-ring-track" cx="56" cy="56" r={RING_RADIUS} />
+              <circle
+                class="result-ring-fill"
+                cx="56"
+                cy="56"
+                r={RING_RADIUS}
+                stroke-dasharray={RING_CIRCUMFERENCE}
+                stroke-dashoffset={RING_CIRCUMFERENCE}
+              />
+            </svg>
+            <h3 class="count-up" data-count-to={stat.value} data-suffix={stat.suffix}>0</h3>
+          </div>
+          <span>{t.results.labels[i]}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 24px;
+  }
+
+  /* Base glass surface, hover lift and animated border-glow are inherited
+     from the shared .result-card rules in global.css. */
+  .result-card {
+    padding: 32px 24px;
+    text-align: center;
+  }
+
+  /* Each ring is a purely decorative draw-in synced to its own counter's
+     duration (see initCountUp in animations.ts) — it is NOT a comparison
+     of magnitude across cards, since the six metrics use different units
+     (%, K+, an ordinal) and aren't meaningfully comparable on one scale.
+     It reads as a clean radial "chart" without implying a false relationship
+     between, say, 212% and 1st place. */
+  .result-ring-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 116px;
+    height: 116px;
+    margin: 0 auto 16px;
+  }
+
+  .result-ring {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+  }
+
+  .result-ring-track {
+    fill: none;
+    stroke: var(--glass-border);
+    stroke-width: 4;
+  }
+
+  .result-ring-fill {
+    fill: none;
+    stroke: var(--primary);
+    stroke-width: 4;
+    stroke-linecap: round;
+    filter: drop-shadow(0 0 6px rgba(139, 92, 246, 0.55));
+  }
+
+  .result-card h3 {
+    position: relative;
+    font-size: clamp(1.3rem, 2vw, 1.65rem);
+    font-weight: 800;
+    color: var(--primary);
+    margin: 0;
+  }
+
+  .result-card span {
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+</style>

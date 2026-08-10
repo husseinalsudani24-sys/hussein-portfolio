@@ -1,0 +1,559 @@
+---
+import { Expand, ExternalLink, ShieldCheck, X, Calendar, Hash } from "@lucide/astro";
+import { siGoogle, siGoogleads } from "simple-icons";
+import { certifications } from "../data/certifications";
+import { getTranslations, defaultLocale, type Locale } from "../i18n";
+
+const locale = (Astro.currentLocale ?? defaultLocale) as Locale;
+const t = getTranslations(locale);
+
+// Simple-icons brand glyph per issuer, where one genuinely exists — Google
+// Ads certs get the Ads mark, the plain "Fundamentals" cert gets the
+// Google "G". Edraak, Dubai Future Foundation and Retouching Lab have no
+// simple-icons entry, so those fall back to a typographic monogram badge
+// instead of an invented logo.
+const issuerIcon: Record<string, { path: string; hex: string } | undefined> = {
+  "google-ads-display": siGoogleads,
+  "google-ads-search": siGoogleads,
+  "google-digital-marketing-fundamentals": siGoogle,
+};
+---
+
+<section id="certifications" class="section" data-reveal>
+  <div class="container">
+    <span class="section-tag">{t.certifications.tag}</span>
+    <h2>{t.certifications.heading}</h2>
+    <p class="section-intro">
+      {t.certifications.intro}
+    </p>
+
+    <div class="cert-grid">
+      {certifications.map((cert) => {
+        const icon = issuerIcon[cert.slug];
+        return (
+          <div class="cert-card" data-cert={cert.slug}>
+            <button
+              type="button"
+              class="cert-thumb"
+              data-cert-trigger={cert.slug}
+              aria-label={`${t.certifications.viewFull}: ${cert.title}`}
+            >
+              <img
+                class="cert-thumb-img"
+                src={cert.image}
+                alt={`${cert.title} — ${cert.issuer}`}
+                loading="lazy"
+                decoding="async"
+                width="640"
+                height="480"
+              />
+              <span class="cert-thumb-scrim" aria-hidden="true"></span>
+              <span class="cert-thumb-expand" aria-hidden="true">
+                <Expand size={18} stroke-width={2} />
+              </span>
+              <span class="cert-category" data-category={cert.category}>
+                {t.certifications.categories[cert.category]}
+              </span>
+            </button>
+
+            <div class="cert-body">
+              <div class="cert-issuer-row">
+                {icon ? (
+                  <svg class="cert-issuer-icon" viewBox="0 0 24 24" width="18" height="18" fill={`#${icon.hex}`} aria-hidden="true">
+                    <path d={icon.path} />
+                  </svg>
+                ) : (
+                  <span class="cert-issuer-monogram" aria-hidden="true">{cert.issuer.charAt(0)}</span>
+                )}
+                <span class="cert-issuer">{cert.issuer}</span>
+              </div>
+
+              <h3>{cert.title}</h3>
+
+              <div class="cert-meta">
+                {cert.issueDate && (
+                  <span class="cert-meta-item">
+                    <Calendar size={13} stroke-width={2} aria-hidden="true" />
+                    {t.certifications.issued} {cert.issueDate}
+                  </span>
+                )}
+                {cert.credentialId && (
+                  <span class="cert-meta-item">
+                    <Hash size={13} stroke-width={2} aria-hidden="true" />
+                    {cert.credentialId}
+                  </span>
+                )}
+              </div>
+
+              {cert.skills && cert.skills.length > 0 && (
+                <div class="cert-skills">
+                  {cert.skills.map((skill) => (
+                    <span>{skill}</span>
+                  ))}
+                </div>
+              )}
+
+              <div class="cert-actions">
+                <button type="button" class="cert-action cert-action-primary" data-cert-trigger={cert.slug}>
+                  <Expand size={15} stroke-width={2.5} aria-hidden="true" />
+                  {t.certifications.viewFull}
+                </button>
+                {cert.verifyUrl && (
+                  <a
+                    href={cert.verifyUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="cert-action cert-action-verify"
+                  >
+                    <ShieldCheck size={15} stroke-width={2.5} aria-hidden="true" />
+                    {t.certifications.verify}
+                    <ExternalLink size={12} stroke-width={2.5} aria-hidden="true" />
+                  </a>
+                )}
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </div>
+
+  <div class="cert-lightbox" data-cert-lightbox hidden>
+    <div class="cert-lightbox-backdrop" data-cert-lightbox-close></div>
+    <div class="cert-lightbox-panel" role="dialog" aria-modal="true" aria-label={t.certifications.viewFull}>
+      <button
+        type="button"
+        class="cert-lightbox-close"
+        data-cert-lightbox-close
+        aria-label={t.certifications.close}
+      >
+        <X size={22} stroke-width={2} />
+      </button>
+      <img data-cert-lightbox-image src="" alt="" />
+      <div class="cert-lightbox-caption">
+        <h3 data-cert-lightbox-title></h3>
+        <p data-cert-lightbox-issuer></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cert-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
+  }
+
+  /* Base glass surface, hover lift and animated border-glow are inherited
+     from the shared .cert-card rules in global.css — only this card's
+     internal layout lives here. */
+  .cert-card {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  .cert-thumb {
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border: none;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+    background: var(--surface-2);
+    overflow: hidden;
+  }
+
+  .cert-thumb-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
+  }
+
+  .cert-card:hover .cert-thumb-img {
+    transform: scale(1.05);
+  }
+
+  .cert-thumb-scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 55%, rgba(0, 0, 0, 0.55));
+    opacity: 0;
+    transition: opacity 0.35s;
+  }
+
+  .cert-card:hover .cert-thumb-scrim {
+    opacity: 1;
+  }
+
+  .cert-thumb-expand {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(8, 8, 13, 0.55);
+    backdrop-filter: blur(8px) saturate(160%);
+    -webkit-backdrop-filter: blur(8px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: white;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity 0.35s, transform 0.35s;
+    pointer-events: none;
+  }
+
+  .cert-card:hover .cert-thumb-expand {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .cert-category {
+    position: absolute;
+    top: 14px;
+    inset-inline-end: 14px;
+    padding: 6px 13px;
+    border-radius: 999px;
+    background: rgba(8, 8, 13, 0.55);
+    backdrop-filter: blur(8px) saturate(160%);
+    -webkit-backdrop-filter: blur(8px) saturate(160%);
+    border: 1px solid var(--cat-color, rgba(255, 255, 255, 0.15));
+    color: var(--cat-color, white);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  .cert-category[data-category="paid-media"] { --cat-color: #a78bfa; }
+  .cert-category[data-category="seo"] { --cat-color: #4ade80; }
+  .cert-category[data-category="digital-marketing"] { --cat-color: #60a5fa; }
+  .cert-category[data-category="ai"] { --cat-color: #22d3ee; }
+  .cert-category[data-category="security"] { --cat-color: #f87171; }
+  .cert-category[data-category="creative"] { --cat-color: #f472b6; }
+
+  .cert-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 24px;
+  }
+
+  .cert-issuer-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .cert-issuer-icon {
+    flex-shrink: 0;
+  }
+
+  .cert-issuer-monogram {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(139, 92, 246, 0.18);
+    color: var(--primary);
+    font-size: 0.7rem;
+    font-weight: 800;
+  }
+
+  .cert-issuer {
+    color: var(--muted);
+    font-size: 0.82rem;
+    font-weight: 600;
+  }
+
+  .cert-body h3 {
+    font-size: 1.1rem;
+    line-height: 1.3;
+    margin-bottom: 14px;
+  }
+
+  .cert-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    margin-bottom: 14px;
+  }
+
+  .cert-meta-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--muted);
+    font-size: 0.78rem;
+  }
+
+  .cert-meta-item :global(svg) {
+    flex-shrink: 0;
+    opacity: 0.75;
+  }
+
+  .cert-skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+
+  .cert-skills span {
+    padding: 5px 11px;
+    border-radius: 999px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+
+  .cert-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: auto;
+    padding-top: 4px;
+  }
+
+  .cert-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+  }
+
+  .cert-action-primary {
+    border: 1px solid var(--border-strong);
+    background: transparent;
+    color: white;
+  }
+
+  .cert-action-primary:hover {
+    border-color: var(--primary);
+    background: rgba(139, 92, 246, 0.1);
+  }
+
+  .cert-action-verify {
+    border: 1px solid transparent;
+    background: rgba(139, 92, 246, 0.12);
+    color: var(--primary);
+  }
+
+  .cert-action-verify:hover {
+    background: rgba(139, 92, 246, 0.2);
+  }
+
+  /* ===== Lightbox ===== */
+
+  .cert-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-6, 24px);
+  }
+
+  .cert-lightbox[hidden] {
+    display: none;
+  }
+
+  .cert-lightbox-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(5, 5, 9, 0.85);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .cert-lightbox.is-open .cert-lightbox-backdrop {
+    opacity: 1;
+  }
+
+  .cert-lightbox-panel {
+    position: relative;
+    z-index: 1;
+    max-width: min(880px, 100%);
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    box-shadow: var(--shadow-premium);
+    overflow: hidden;
+  }
+
+  .cert-lightbox-panel img {
+    display: block;
+    width: 100%;
+    max-height: 72vh;
+    object-fit: contain;
+    background: #000;
+  }
+
+  .cert-lightbox-caption {
+    padding: 18px 24px;
+    border-top: 1px solid var(--border);
+  }
+
+  .cert-lightbox-caption h3 {
+    font-size: 1.05rem;
+    margin-bottom: 4px;
+  }
+
+  .cert-lightbox-caption p {
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+
+  .cert-lightbox-close {
+    position: absolute;
+    top: 14px;
+    inset-inline-end: 14px;
+    z-index: 2;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(8, 8, 13, 0.6);
+    backdrop-filter: blur(8px) saturate(160%);
+    -webkit-backdrop-filter: blur(8px) saturate(160%);
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s, transform 0.3s;
+  }
+
+  .cert-lightbox-close:hover {
+    border-color: var(--primary);
+    background: rgba(139, 92, 246, 0.25);
+    transform: rotate(90deg);
+  }
+
+  @media (max-width: 640px) {
+    .cert-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .cert-lightbox-panel img {
+      max-height: 60vh;
+    }
+  }
+</style>
+
+<script>
+  import { gsap } from "gsap";
+
+  function initCertLightbox() {
+    const lightbox = document.querySelector<HTMLElement>("[data-cert-lightbox]");
+    if (!lightbox || lightbox.dataset.bound === "true") return;
+    lightbox.dataset.bound = "true";
+
+    const panel = lightbox.querySelector<HTMLElement>(".cert-lightbox-panel");
+    const image = lightbox.querySelector<HTMLImageElement>("[data-cert-lightbox-image]");
+    const titleEl = lightbox.querySelector<HTMLElement>("[data-cert-lightbox-title]");
+    const issuerEl = lightbox.querySelector<HTMLElement>("[data-cert-lightbox-issuer]");
+    const closeTriggers = lightbox.querySelectorAll<HTMLElement>("[data-cert-lightbox-close]");
+
+    const prefersReducedMotion = () =>
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    let lastFocused: HTMLElement | null = null;
+
+    function open(trigger: HTMLElement) {
+      const card = trigger.closest<HTMLElement>("[data-cert]");
+      const sourceImg = card?.querySelector<HTMLImageElement>(".cert-thumb-img");
+      if (!card || !sourceImg || !image || !titleEl || !issuerEl || !lightbox) return;
+
+      image.src = sourceImg.src;
+      image.alt = sourceImg.alt;
+      titleEl.textContent = card.querySelector("h3")?.textContent ?? "";
+      issuerEl.textContent = card.querySelector(".cert-issuer")?.textContent ?? "";
+
+      lastFocused = document.activeElement as HTMLElement;
+      lightbox.hidden = false;
+      document.body.style.overflow = "hidden";
+
+      requestAnimationFrame(() => {
+        lightbox.classList.add("is-open");
+        lightbox.querySelector<HTMLElement>(".cert-lightbox-close")?.focus();
+      });
+
+      if (panel && !prefersReducedMotion()) {
+        gsap.fromTo(
+          panel,
+          { opacity: 0, scale: 0.92, y: 24 },
+          { opacity: 1, scale: 1, y: 0, duration: 0.45, ease: "power3.out" }
+        );
+      }
+    }
+
+    function close() {
+      if (!lightbox) return;
+      lightbox.classList.remove("is-open");
+      document.body.style.overflow = "";
+
+      const finish = () => {
+        lightbox.hidden = true;
+      };
+
+      if (panel && !prefersReducedMotion()) {
+        gsap.to(panel, {
+          opacity: 0,
+          scale: 0.94,
+          y: 12,
+          duration: 0.25,
+          ease: "power2.in",
+          onComplete: finish,
+        });
+      } else {
+        finish();
+      }
+
+      lastFocused?.focus();
+    }
+
+    document.querySelectorAll<HTMLElement>("[data-cert-trigger]").forEach((trigger) => {
+      trigger.addEventListener("click", () => open(trigger));
+    });
+
+    closeTriggers.forEach((el) => el.addEventListener("click", close));
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && lightbox && !lightbox.hidden) close();
+    });
+  }
+
+  document.addEventListener("astro:page-load", initCertLightbox);
+</script>

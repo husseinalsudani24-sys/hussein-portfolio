@@ -1,0 +1,67 @@
+﻿---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import Navbar from "../../../components/Navbar.astro";
+import Footer from "../../../components/Footer.astro";
+import ProjectCard from "../../../components/ProjectCard.astro";
+import { portfolio } from "../../../data/portfolio";
+import { getTranslations, defaultLocale, type Locale } from "../../../i18n";
+
+const locale = (Astro.currentLocale ?? defaultLocale) as Locale;
+const t = getTranslations(locale);
+---
+
+<BaseLayout
+  title={`${t.meta.projects.title} | ${portfolio.personal.name}`}
+  description={t.meta.projects.description}
+  path="/projects"
+>
+  <Navbar path="/projects" />
+
+  <main id="main-content">
+    <section class="section projects-hero">
+      <div class="container">
+        <span class="tag-badge">{t.projectsPage.badge}</span>
+        <h1>{t.projectsPage.heading}</h1>
+        <p class="lead">
+          {t.projectsPage.intro}
+        </p>
+      </div>
+    </section>
+
+    <section class="projects-section" data-reveal>
+      <div class="container">
+        <div class="projects-grid">
+          {portfolio.projects.map((project) => (
+            <ProjectCard {...project} {...t.projectsData[project.slug as keyof typeof t.projectsData]} />
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .projects-hero {
+    padding-top: 160px;
+    text-align: center;
+  }
+
+  /* This hero is centered (unlike the left-aligned case-study heroes), so
+     .lead only needs to override the two properties that actually differ —
+     everything else is inherited from the shared rule in global.css. */
+  .lead {
+    max-width: 640px;
+    margin: 20px auto 44px;
+  }
+
+  .projects-section {
+    padding: 40px 0 140px;
+  }
+</style>
+
+<script>
+  import { initPageAnimations } from "../../../scripts/animations";
+  initPageAnimations();
+</script>

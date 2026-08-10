@@ -1,0 +1,231 @@
+---
+import { Menu, X } from "@lucide/astro";
+import { getRelativeLocaleUrl } from "astro:i18n";
+import { getTranslations, defaultLocale, type Locale } from "../i18n";
+import LanguageSwitcher from "./LanguageSwitcher.astro";
+
+interface Props {
+  /** Canonical path with no locale prefix — passed through to the language switcher. */
+  path?: string;
+}
+
+const { path = "/" } = Astro.props;
+const locale = (Astro.currentLocale ?? defaultLocale) as Locale;
+const t = getTranslations(locale);
+const home = getRelativeLocaleUrl(locale, "");
+const projectsUrl = getRelativeLocaleUrl(locale, "projects");
+---
+
+<nav class="navbar">
+  <div class="container nav-container">
+
+    <a href={home} class="logo">
+      Hussein Al Sudani
+    </a>
+
+    <button
+      type="button"
+      id="nav-toggle"
+      class="nav-toggle"
+      aria-expanded="false"
+      aria-controls="nav-links"
+      aria-label={t.nav.toggleMenu}
+    >
+      <Menu class="icon-menu" aria-hidden="true" />
+      <X class="icon-close" aria-hidden="true" />
+    </button>
+
+    <ul class="nav-links" id="nav-links">
+      <li><a href={`${home}#about`}>{t.nav.about}</a></li>
+      <li><a href={projectsUrl}>{t.nav.projects}</a></li>
+      <li><a href={`${home}#skills`}>{t.nav.skills}</a></li>
+      <li><a href={`${home}#experience`}>{t.nav.experience}</a></li>
+      <li><a href={`${home}#contact`}>{t.nav.contact}</a></li>
+      <li class="nav-lang-mobile"><LanguageSwitcher path={path} /></li>
+    </ul>
+
+    <div class="nav-lang-desktop">
+      <LanguageSwitcher path={path} />
+    </div>
+
+  </div>
+</nav>
+
+<script data-astro-rerun>
+  // data-astro-rerun: Astro's ClientRouter dedupes scripts by content, and
+  // this identical script appears on every page, so without this attribute
+  // it would only ever execute once per session and stop rebinding the
+  // toggle/scroll behavior to the fresh DOM after the first navigation.
+  // Rebind targets are re-queried below on every run; the window-scoped
+  // handler swap prevents the scroll/keydown listeners from piling up on
+  // window/document across repeated re-runs.
+  //
+  // Wrapped in an IIFE: each rerun re-inserts this as a new classic
+  // (non-module) inline script, and top-level const/let in a classic
+  // script all share one global lexical scope — so without a function
+  // scope here, the second run's `const toggle` etc. throws
+  // "already been declared" instead of just rebinding.
+  (function () {
+  const toggle = document.getElementById("nav-toggle");
+  const links = document.getElementById("nav-links");
+  const navbar = document.querySelector(".navbar");
+
+  const closeMenu = () => {
+    links?.classList.remove("is-open");
+    toggle?.setAttribute("aria-expanded", "false");
+    document.body.classList.remove("nav-open");
+  };
+
+  toggle?.addEventListener("click", () => {
+    const isOpen = links?.classList.toggle("is-open");
+    toggle.setAttribute("aria-expanded", String(Boolean(isOpen)));
+    document.body.classList.toggle("nav-open", Boolean(isOpen));
+  });
+
+  links?.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", closeMenu);
+  });
+
+  const updateScrollState = () => {
+    navbar?.classList.toggle("is-scrolled", window.scrollY > 40);
+  };
+
+  // Plain JS only below: this script has a non-"src" attribute
+  // (data-astro-rerun), which makes Astro ship it unprocessed as a literal
+  // inline script rather than compiling it from TypeScript, so TS-only
+  // syntax (type assertions, annotations) would throw at runtime.
+  const win = window;
+
+  if (win.__navScrollHandler) {
+    window.removeEventListener("scroll", win.__navScrollHandler);
+  }
+
+  if (win.__navKeydownHandler) {
+    document.removeEventListener("keydown", win.__navKeydownHandler);
+  }
+
+  let ticking = false;
+  win.__navScrollHandler = () => {
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        updateScrollState();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  };
+  win.__navKeydownHandler = (event) => {
+    if (event.key === "Escape") closeMenu();
+  };
+
+  window.addEventListener("scroll", win.__navScrollHandler, { passive: true });
+  document.addEventListener("keydown", win.__navKeydownHandler);
+
+  updateScrollState();
+  })();
+</script>
+
+<style>
+  .nav-toggle {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: transparent;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  .nav-toggle:hover {
+    border-color: var(--primary);
+  }
+
+  .nav-toggle :global(.icon-close) {
+    display: none;
+  }
+
+  .nav-toggle[aria-expanded="true"] :global(.icon-menu) {
+    display: none;
+  }
+
+  .nav-toggle[aria-expanded="true"] :global(.icon-close) {
+    display: block;
+  }
+
+  :global(body.nav-open) {
+    overflow: hidden;
+  }
+
+  @media (max-width: 768px) {
+    .nav-toggle {
+      display: flex;
+    }
+
+    .nav-links {
+      position: fixed;
+      top: 80px;
+      left: 0;
+      right: 0;
+      flex-direction: column;
+      gap: 0;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      max-height: calc(100vh - 80px);
+      overflow-y: auto;
+      transform: translateY(-12px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+
+    .nav-links.is-open {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .nav-links li {
+      width: 100%;
+    }
+
+    .nav-links a {
+      display: block;
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-links a::after {
+      display: none;
+    }
+  }
+
+  .nav-lang-mobile {
+    display: none;
+  }
+
+  @media (max-width: 768px) {
+    .nav-lang-desktop {
+      display: none;
+    }
+
+    .nav-lang-mobile {
+      display: block;
+      padding: 20px 24px;
+    }
+
+    /* Overrides the generic `.nav-links a` block/border-bottom treatment
+       above — the language switcher's own pill links (from
+       LanguageSwitcher.astro, a different component) need to keep their
+       inline pill shape here, not become full-width menu rows. */
+    .nav-lang-mobile :global(a) {
+      display: inline-block !important;
+      padding: 6px 10px !important;
+      border-bottom: none !important;
+    }
+  }
+</style>

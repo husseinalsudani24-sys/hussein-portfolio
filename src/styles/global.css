@@ -1,0 +1,1639 @@
+/* ==========================================
+   GLOBAL RESET
+========================================== */
+
+*,
+*::before,
+*::after{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+:root{
+
+    --bg:#08080d;
+    --surface:#11111b;
+    --surface-2:#171726;
+
+    --text:#ffffff;
+    --muted:#a6a6b5;
+
+    --primary:#8b5cf6;
+    --primary-hover:#7c3aed;
+
+    --border:rgba(255,255,255,.08);
+    --border-strong:rgba(255,255,255,.12);
+
+    --radius:18px;
+
+    --container:1200px;
+
+    --glass-bg:rgba(17,17,27,.55);
+    --glass-border:rgba(255,255,255,.1);
+    --glass-blur:blur(20px) saturate(160%);
+
+    --shadow-hover:0 25px 70px rgba(0,0,0,.35);
+    --shadow-premium:0 30px 90px rgba(0,0,0,.45);
+
+    --primary-glow:rgba(139,92,246,.45);
+
+    --font-body:"Inter",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+    --font-display:"Bricolage Grotesque","Inter",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+
+    /* 8pt spacing system — every value is a multiple of 4px (half-steps
+       allowed for fine-tuning), named by its multiplier of 4px so
+       --space-8 == 32px, --space-2 == 8px, etc. New spacing anywhere in
+       the codebase should reach for one of these instead of an ad-hoc
+       value. */
+    --space-1:4px;
+    --space-2:8px;
+    --space-3:12px;
+    --space-4:16px;
+    --space-5:20px;
+    --space-6:24px;
+    --space-7:28px;
+    --space-8:32px;
+    --space-9:36px;
+    --space-10:40px;
+    --space-11:44px;
+    --space-12:48px;
+    --space-14:56px;
+    --space-16:64px;
+    --space-20:80px;
+    --space-24:96px;
+    --space-32:128px;
+
+}
+
+html{
+
+    /* Lenis (src/scripts/smoothScroll.ts) owns smooth scrolling via JS with
+       proper easing — native CSS smooth-scroll would fight it on anchor
+       jumps. This is the no-JS / JS-not-yet-loaded fallback only. */
+    scroll-behavior:auto;
+
+}
+
+@media (prefers-reduced-motion:reduce){
+
+    html{
+
+        scroll-behavior:auto;
+
+    }
+
+    *,
+    *::before,
+    *::after{
+
+        animation-duration:.01ms !important;
+        animation-iteration-count:1 !important;
+        transition-duration:.01ms !important;
+        scroll-behavior:auto !important;
+
+    }
+
+}
+
+body{
+
+    background:var(--bg);
+    color:var(--text);
+
+    font-family:var(--font-body);
+
+    line-height:1.7;
+
+    overflow-x:hidden;
+
+    animation:page-fade-in .6s ease both;
+
+}
+
+@keyframes page-fade-in{
+
+    from{ opacity:0; }
+
+    to{ opacity:1; }
+
+}
+
+/* ==========================================
+   TYPOGRAPHY
+========================================== */
+
+h1{
+
+    font-family:var(--font-display);
+
+    font-size:clamp(3.5rem,7vw,6.5rem);
+
+    line-height:0.98;
+
+    font-weight:700;
+
+    letter-spacing:-0.035em;
+
+}
+
+h2{
+
+    font-family:var(--font-display);
+
+    font-size:clamp(2rem,4vw,3.25rem);
+
+    line-height:1.08;
+
+    font-weight:700;
+
+    letter-spacing:-0.025em;
+
+    margin-bottom:24px;
+
+}
+
+h3{
+
+    font-size:1.25rem;
+
+    line-height:1.35;
+
+    font-weight:700;
+
+    letter-spacing:-0.01em;
+
+}
+
+p{
+
+    color:var(--muted);
+
+}
+
+/* Bricolage Grotesque doesn't cover Arabic script — Arabic headings fall
+   back to the body's Noto Sans Arabic stack instead of silently dropping
+   to a mismatched Latin fallback. */
+[dir="rtl"] h1,
+[dir="rtl"] h2{
+
+    font-family:var(--font-body);
+
+    letter-spacing:normal;
+
+}
+
+/* Prevents the digits from jittering in width as GSAP animates them
+   upward (initCountUp in animations.ts) — every digit occupies the same
+   fixed width instead of each glyph's natural proportional width. */
+.count-up{
+
+    font-variant-numeric:tabular-nums;
+
+}
+
+.section-tag{
+
+    display:inline-block;
+
+    margin-bottom:18px;
+
+    color:var(--primary);
+
+    font-weight:700;
+
+    letter-spacing:.08em;
+
+    text-transform:uppercase;
+
+}
+
+/* ==========================================
+   ACCESSIBILITY
+========================================== */
+
+a:focus-visible,
+button:focus-visible{
+
+    outline:2px solid var(--primary);
+
+    outline-offset:3px;
+
+    border-radius:4px;
+
+}
+
+.skip-link{
+
+    position:absolute;
+
+    top:-100%;
+
+    left:16px;
+
+    z-index:1000;
+
+    padding:12px 20px;
+
+    /* --primary-hover, not --primary: white text directly on --primary is
+       only ~4.2:1 at this weight/size, short of WCAG AA's 4.5:1 for normal
+       text — the darker shade clears it comfortably (~5.7:1). */
+    background:var(--primary-hover);
+
+    color:white;
+
+    font-weight:700;
+
+    border-radius:0 0 10px 10px;
+
+    text-decoration:none;
+
+    transition:top .25s ease;
+
+}
+
+.skip-link:focus-visible{
+
+    top:0;
+
+    outline:2px solid white;
+
+    outline-offset:-4px;
+
+}
+
+/* ==========================================
+   LAYOUT
+========================================== */
+
+.container{
+
+    width:min(var(--container),92%);
+
+    margin-inline:auto;
+
+}
+
+.section{
+
+    position:relative;
+
+    padding:clamp(64px,10vw,120px) 0;
+
+}
+
+.section:nth-of-type(even)::before{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    z-index:-1;
+
+    background:radial-gradient(ellipse 60% 50% at 50% 0%,rgba(139,92,246,.05),transparent 70%);
+
+}
+
+/* ==========================================
+   NAVBAR
+========================================== */
+
+.navbar{
+
+    position:fixed;
+
+    top:0;
+    left:0;
+
+    width:100%;
+
+    z-index:999;
+
+    background:rgba(8,8,13,.7);
+
+    backdrop-filter:blur(18px) saturate(160%);
+
+    -webkit-backdrop-filter:blur(18px) saturate(160%);
+
+    border-bottom:1px solid var(--border);
+
+    transition:height .3s ease, background .3s ease;
+
+}
+
+.navbar.is-scrolled{
+
+    background:rgba(8,8,13,.85);
+
+    box-shadow:0 10px 40px rgba(0,0,0,.25);
+
+}
+
+.nav-container{
+
+    height:80px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    transition:height .3s ease;
+
+}
+
+@media (min-width:769px){
+
+.navbar.is-scrolled .nav-container{
+
+    height:68px;
+
+}
+
+}
+
+.logo{
+
+    color:white;
+
+    text-decoration:none;
+
+    font-weight:800;
+
+    font-size:1.35rem;
+
+}
+
+.nav-links{
+
+    display:flex;
+
+    gap:34px;
+
+    list-style:none;
+
+}
+
+.nav-links a{
+
+    color:#d5d5e4;
+
+    text-decoration:none;
+
+    position:relative;
+
+    transition:.3s;
+
+}
+
+.nav-links a::after{
+
+    content:"";
+
+    position:absolute;
+
+    left:0;
+
+    bottom:-6px;
+
+    width:0;
+
+    height:2px;
+
+    background:var(--primary);
+
+    transition:.3s;
+
+}
+
+.nav-links a:hover{
+
+    color:white;
+
+}
+
+.nav-links a:hover::after{
+
+    width:100%;
+
+}
+
+.nav-links a.is-active-section{
+
+    color:white;
+
+}
+
+.nav-links a.is-active-section::after{
+
+    width:100%;
+
+}
+
+/* ==========================================
+   HERO
+========================================== */
+
+.hero{
+
+    min-height:100vh;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    text-align:center;
+
+    padding-top:80px;
+
+}
+
+.hero p{
+
+    max-width:760px;
+
+    margin:30px auto;
+
+    font-size:1.2rem;
+
+}
+
+.btn{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:18px 40px;
+
+    border-radius:14px;
+
+    /* --primary-hover, not --primary: white text directly on --primary is
+       only ~4.2:1 at this weight/size, short of WCAG AA's 4.5:1 for normal
+       text — the darker shade clears it comfortably (~5.7:1). Hover then
+       brightens toward --primary instead of the more usual darken-on-hover,
+       since the darker shade now owns the resting state. */
+    background:var(--primary-hover);
+
+    color:white;
+
+    text-decoration:none;
+
+    font-weight:700;
+
+    /* Scoped, not "all": GSAP's hero/reveal entrance animations write
+       opacity and translate on these same buttons every frame, and a
+       transition covering "all" fights that per-frame write, permanently
+       trapping the value near its starting point instead of settling. */
+    transition:background-color .35s, border-color .35s, box-shadow .35s, transform .35s;
+
+}
+
+.btn:hover{
+
+    background:var(--primary);
+
+    transform:translateY(-5px);
+
+    box-shadow:0 18px 40px rgba(139,92,246,.35);
+
+}
+
+.btn-outline{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:18px 40px;
+
+    border:1px solid var(--border-strong);
+
+    border-radius:14px;
+
+    color:white;
+
+    text-decoration:none;
+
+    font-weight:700;
+
+    /* Scoped, not "all": GSAP's hero/reveal entrance animations write
+       opacity and translate on these same buttons every frame, and a
+       transition covering "all" fights that per-frame write, permanently
+       trapping the value near its starting point instead of settling. */
+    transition:background-color .35s, border-color .35s, box-shadow .35s, transform .35s;
+
+}
+
+.btn-outline:hover{
+
+    border-color:var(--primary);
+
+    background:rgba(139,92,246,.08);
+
+    transform:translateY(-5px);
+
+}
+
+/* ==========================================
+   GRID
+========================================== */
+
+.projects-grid,
+.skills-grid{
+
+    display:grid;
+
+    gap:24px;
+
+}
+
+.projects-grid{
+
+    grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+
+}
+
+.skills-grid{
+
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+
+}
+
+/* ==========================================
+   CARDS
+   One glass card system shared by every card-shaped surface in the site
+   (project cards, skill/stat/info tiles, certifications, results,
+   testimonials). True glassmorphism (translucent + blurred, not a flat
+   solid fill) with a slow-rotating conic-gradient ring that fades in on
+   hover — the "animated border" called for in the design brief.
+========================================== */
+
+@property --border-angle{
+
+    syntax:'<angle>';
+
+    inherits:false;
+
+    initial-value:0deg;
+
+}
+
+.project-card,
+.skill-card,
+.stat-card,
+.info-card,
+.cert-card,
+.result-card,
+.testimonial-card,
+.tech-stack-item,
+.timeline-content{
+
+    position:relative;
+
+    background:var(--glass-bg);
+
+    border:1px solid var(--glass-border);
+
+    border-radius:var(--radius);
+
+    padding:28px;
+
+    backdrop-filter:var(--glass-blur);
+
+    -webkit-backdrop-filter:var(--glass-blur);
+
+    transition:transform .35s, border-color .35s, box-shadow .35s;
+
+}
+
+.project-card:hover,
+.skill-card:hover,
+.stat-card:hover,
+.info-card:hover,
+.cert-card:hover,
+.result-card:hover,
+.testimonial-card:hover,
+.tech-stack-item:hover,
+.timeline-content:hover{
+
+    transform:translateY(-8px);
+
+    border-color:var(--primary-glow);
+
+    box-shadow:var(--shadow-hover);
+
+}
+
+/* Gradient-ring glow shared by every hoverable card/tile in the design system. */
+
+.project-card::before,
+.info-card::before,
+.stat-card::before,
+.cert-card::before,
+.result-card::before,
+.testimonial-card::before,
+.tech-stack-item::before,
+.timeline-content::before,
+.gallery-item::before{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    border-radius:var(--radius);
+
+    padding:1px;
+
+    background:conic-gradient(from var(--border-angle),rgba(139,92,246,.6),rgba(6,182,212,.45),rgba(79,70,229,.55),rgba(139,92,246,.6));
+
+    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+
+    -webkit-mask-composite:xor;
+
+    mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+
+    mask-composite:exclude;
+
+    opacity:0;
+
+    transition:opacity .35s;
+
+    pointer-events:none;
+
+}
+
+.project-card:hover::before,
+.info-card:hover::before,
+.stat-card:hover::before,
+.cert-card:hover::before,
+.result-card:hover::before,
+.testimonial-card:hover::before,
+.tech-stack-item:hover::before,
+.timeline-content:hover::before,
+.gallery-item:hover::before{
+
+    opacity:1;
+
+    animation:card-border-spin 3s linear infinite;
+
+}
+
+@keyframes card-border-spin{
+
+    to{ --border-angle:360deg; }
+
+}
+
+@media(prefers-reduced-motion:reduce){
+
+    .project-card:hover::before,
+    .info-card:hover::before,
+    .stat-card:hover::before,
+    .cert-card:hover::before,
+    .result-card:hover::before,
+    .testimonial-card:hover::before,
+    .tech-stack-item:hover::before,
+    .timeline-content:hover::before,
+    .gallery-item:hover::before{
+
+        animation:none;
+
+    }
+
+}
+
+/* ==========================================
+   CASE STUDY PAGES
+========================================== */
+
+.case-hero{
+
+    position:relative;
+
+    padding-top:160px;
+
+    overflow:hidden;
+
+}
+
+.case-hero-bg{
+
+    position:absolute;
+
+    inset:0;
+
+    background:
+      radial-gradient(circle at 15% 20%,rgba(139,92,246,.28),transparent 45%),
+      radial-gradient(circle at 85% 15%,rgba(79,70,229,.22),transparent 42%),
+      radial-gradient(circle at 50% 90%,rgba(6,182,212,.12),transparent 50%);
+
+    filter:blur(60px);
+
+    animation:blob-pulse 12s ease-in-out infinite;
+
+    /* transform is owned by the GSAP scroll-parallax tween on this element;
+       the idle animation only touches filter/opacity to avoid fighting it. */
+
+}
+
+@keyframes blob-pulse{
+
+    0%,100%{ filter:blur(60px); opacity:1; }
+
+    50%{ filter:blur(75px); opacity:.85; }
+
+}
+
+.case-hero-wrapper{
+
+    position:relative;
+
+    z-index:2;
+
+}
+
+.back-link{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    color:var(--muted);
+
+    text-decoration:none;
+
+    font-weight:600;
+
+    margin-bottom:28px;
+
+    transition:color .3s, gap .3s;
+
+}
+
+.back-link:hover{
+
+    color:var(--primary);
+
+    gap:12px;
+
+}
+
+.tag-badge{
+
+    display:inline-block;
+
+    padding:8px 18px;
+
+    border:1px solid var(--glass-border);
+
+    border-radius:999px;
+
+    margin-bottom:20px;
+
+    color:var(--primary);
+
+    background:rgba(139,92,246,.1);
+
+    backdrop-filter:var(--glass-blur);
+
+    -webkit-backdrop-filter:var(--glass-blur);
+
+    font-size:.85rem;
+
+    font-weight:600;
+
+    letter-spacing:.02em;
+
+}
+
+.lead{
+
+    max-width:720px;
+
+    font-size:1.15rem;
+
+    margin:20px 0 44px;
+
+}
+
+.hero-meta{
+
+    display:grid;
+
+    grid-template-columns:repeat(4,1fr);
+
+    gap:24px;
+
+    margin:0 0 50px;
+
+    padding:28px 32px;
+
+    border-radius:var(--radius);
+
+    background:var(--glass-bg);
+
+    backdrop-filter:var(--glass-blur);
+
+    -webkit-backdrop-filter:var(--glass-blur);
+
+    border:1px solid var(--glass-border);
+
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+
+}
+
+.hero-meta dt{
+
+    color:var(--muted);
+
+    font-size:.8rem;
+
+    text-transform:uppercase;
+
+    letter-spacing:.06em;
+
+    margin-bottom:6px;
+
+}
+
+.hero-meta dd{
+
+    font-weight:700;
+
+}
+
+.stat-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+
+    gap:24px;
+
+}
+
+.stat-card h3,
+.stat-card span{
+
+    display:block;
+
+}
+
+.stat-card h3{
+
+    font-size:2.25rem;
+
+    margin-bottom:10px;
+
+    color:white;
+
+}
+
+.stat-card span{
+
+    color:var(--muted);
+
+}
+
+.overview{
+
+    display:grid;
+
+    grid-template-columns:1.3fr 1fr;
+
+    gap:60px;
+
+    align-items:start;
+
+}
+
+.overview-text p{
+
+    margin-bottom:20px;
+
+}
+
+.overview-facts h3{
+
+    margin-bottom:20px;
+
+}
+
+.overview-facts ul{
+
+    list-style:none;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:18px;
+
+}
+
+.overview-facts li{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:4px;
+
+    padding-bottom:18px;
+
+    border-bottom:1px solid var(--border);
+
+}
+
+.overview-facts li:last-child{
+
+    border-bottom:none;
+
+    padding-bottom:0;
+
+}
+
+.overview-facts strong{
+
+    font-size:.8rem;
+
+    text-transform:uppercase;
+
+    letter-spacing:.06em;
+
+    color:var(--primary);
+
+}
+
+.overview-facts span{
+
+    color:var(--muted);
+
+}
+
+.section-intro{
+
+    max-width:760px;
+
+    margin-bottom:40px;
+
+}
+
+.role-list{
+
+    display:grid;
+
+    gap:16px;
+
+    max-width:760px;
+
+    list-style:none;
+
+}
+
+.role-list li{
+
+    position:relative;
+
+    padding-left:28px;
+
+    color:var(--muted);
+
+}
+
+.role-list li::before{
+
+    content:"";
+
+    position:absolute;
+
+    left:0;
+
+    top:.55em;
+
+    width:10px;
+
+    height:10px;
+
+    border-radius:50%;
+
+    background:var(--primary);
+
+}
+
+.card-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+
+    gap:24px;
+
+}
+
+.card-grid h3{
+
+    margin-bottom:12px;
+
+}
+
+.card-grid p{
+
+    margin:0;
+
+}
+
+.process-list{
+
+    list-style:none;
+
+    position:relative;
+
+    max-width:900px;
+
+}
+
+.process-list::before{
+
+    content:"";
+
+    position:absolute;
+
+    left:19px;
+
+    top:8px;
+
+    bottom:8px;
+
+    width:2px;
+
+    background:var(--border);
+
+}
+
+.process-step{
+
+    position:relative;
+
+    display:flex;
+
+    gap:24px;
+
+    margin-bottom:36px;
+
+}
+
+.process-step:last-child{
+
+    margin-bottom:0;
+
+}
+
+.process-number{
+
+    position:relative;
+
+    z-index:1;
+
+    flex-shrink:0;
+
+    width:40px;
+
+    height:40px;
+
+    border-radius:50%;
+
+    background:var(--surface);
+
+    border:1px solid rgba(139,92,246,.45);
+
+    color:var(--primary);
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-weight:700;
+
+    font-size:.85rem;
+
+}
+
+.process-body h3{
+
+    margin-bottom:8px;
+
+}
+
+.process-body p{
+
+    margin:0;
+
+}
+
+.tech-grid{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:12px;
+
+}
+
+.tech-pill{
+
+    padding:10px 18px;
+
+    border-radius:999px;
+
+    background:var(--surface-2);
+
+    border:1px solid var(--border);
+
+    font-size:.9rem;
+
+    color:var(--muted);
+
+    transition:.3s;
+
+}
+
+.tech-pill:hover{
+
+    border-color:rgba(139,92,246,.45);
+
+    color:white;
+
+}
+
+.split{
+
+    display:grid;
+
+    grid-template-columns:1.3fr 1fr;
+
+    gap:60px;
+
+    align-items:start;
+
+}
+
+.split-text p{
+
+    margin-bottom:20px;
+
+}
+
+.split-text code{
+
+    background:var(--surface-2);
+
+    border:1px solid var(--border);
+
+    border-radius:6px;
+
+    padding:2px 6px;
+
+    font-size:.85em;
+
+}
+
+.split-stats{
+
+    display:grid;
+
+    gap:20px;
+
+}
+
+.gallery-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+
+    gap:24px;
+
+}
+
+.gallery-item{
+
+    position:relative;
+
+    border:1px solid var(--border);
+
+    border-radius:var(--radius);
+
+    overflow:hidden;
+
+    transition:transform .35s, border-color .35s, box-shadow .35s;
+}
+
+.gallery-item:hover{
+
+    transform:translateY(-8px);
+
+    border-color:var(--primary-glow);
+
+    box-shadow:var(--shadow-hover);
+
+}
+
+.gallery-visual{
+
+    position:relative;
+
+    height:180px;
+
+    transition:transform .5s ease;
+
+}
+
+.gallery-visual::after{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    background:
+      radial-gradient(circle at 30% 20%,rgba(255,255,255,.25),transparent 55%),
+      linear-gradient(180deg,transparent 40%,rgba(0,0,0,.25));
+
+    pointer-events:none;
+
+}
+
+.gallery-item:hover .gallery-visual{
+
+    transform:scale(1.05);
+
+}
+
+.gallery-item figcaption{
+
+    padding:16px 20px;
+
+    font-size:.9rem;
+
+    color:var(--muted);
+
+    background:var(--surface);
+
+}
+
+.cta{
+
+    text-align:center;
+
+    max-width:900px;
+
+    margin:0 auto;
+
+}
+
+/* Premium glass panel behind every CTA block, applied to the container so
+   no case-study markup changes are required. */
+
+.cta .container{
+
+    position:relative;
+
+    padding:clamp(48px,6vw,80px) clamp(24px,5vw,64px);
+
+    border-radius:calc(var(--radius) + 6px);
+
+    background:var(--glass-bg);
+
+    backdrop-filter:var(--glass-blur);
+
+    -webkit-backdrop-filter:var(--glass-blur);
+
+    border:1px solid var(--glass-border);
+
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+
+    overflow:hidden;
+
+}
+
+.cta .container::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:-120px;
+
+    left:-10%;
+
+    width:120%;
+
+    height:400px;
+
+    background:radial-gradient(ellipse 60% 60% at 50% 0%,rgba(139,92,246,.25),transparent 70%);
+
+    pointer-events:none;
+
+    z-index:0;
+
+}
+
+.cta .container > *{
+
+    position:relative;
+
+    z-index:1;
+
+}
+
+.cta p{
+
+    max-width:640px;
+
+    margin:24px auto 40px;
+
+}
+
+.cta-buttons{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:18px;
+
+    flex-wrap:wrap;
+
+}
+
+@media (max-width:900px){
+
+.overview,
+.split{
+
+    grid-template-columns:1fr;
+
+}
+
+.hero-meta{
+
+    grid-template-columns:repeat(2,1fr);
+
+}
+
+}
+
+@media (max-width:640px){
+
+.case-hero{
+
+    padding-top:130px;
+
+}
+
+.hero-meta{
+
+    grid-template-columns:1fr;
+
+}
+
+.process-step{
+
+    gap:16px;
+
+}
+
+}
+
+.js-reveal{
+
+    opacity:0;
+
+    transform:translateY(24px);
+
+    transition:opacity .7s ease, transform .7s ease;
+
+}
+
+.js-reveal.js-reveal-visible{
+
+    opacity:1;
+
+    transform:translateY(0);
+
+}
+
+/* ==========================================
+   RTL SUPPORT (Arabic)
+   ==========================================
+   [dir="rtl"] is set on <html> for the Arabic locale. The browser's own
+   UA stylesheet maps that to `direction:rtl`, which most of this site's
+   flexbox (justify-content:flex-start/end) and CSS Grid layouts already
+   mirror correctly on their own — logical values, not physical ones.
+   What's below covers the handful of PHYSICAL left/right properties in
+   this file that don't auto-flip, plus swapping the primary font for
+   proper Arabic shaping.
+========================================== */
+
+[dir="rtl"] body{
+
+    font-family:"Noto Sans Arabic","IBM Plex Sans Arabic","Cairo",sans-serif;
+
+}
+
+[dir="rtl"] .skip-link{
+
+    left:auto;
+
+    right:16px;
+
+}
+
+[dir="rtl"] .nav-links a::after{
+
+    left:auto;
+
+    right:0;
+
+}
+
+[dir="rtl"] .back-link{
+
+    flex-direction:row-reverse;
+
+}
+
+[dir="rtl"] .back-link svg{
+
+    transform:scaleX(-1);
+
+}
+
+[dir="rtl"] .role-list li{
+
+    padding-left:0;
+
+    padding-right:28px;
+
+}
+
+[dir="rtl"] .role-list li::before{
+
+    left:auto;
+
+    right:0;
+
+}
+
+[dir="rtl"] .process-list::before{
+
+    left:auto;
+
+    right:19px;
+
+}
+
+/* ==========================================
+   PAGE TRANSITION OVERLAY
+   ==========================================
+   Created and animated by src/scripts/pageTransition.ts — a branded
+   curtain wipe on every client-side navigation instead of Astro's default
+   crossfade. display:none by default so it never intercepts clicks or
+   shows up in the accessibility tree between transitions.
+========================================== */
+
+.page-transition-overlay{
+
+    display:none;
+
+    position:fixed;
+
+    inset:0;
+
+    z-index:9999;
+
+    pointer-events:none;
+
+    background:linear-gradient(135deg,#0d0a1a 0%,#08080d 55%,#0a0e16 100%);
+
+}
+
+/* ==========================================
+   CUSTOM CURSOR
+   ==========================================
+   Created and animated by src/scripts/cursor.ts. Fine-pointer devices
+   only — the script itself never initializes on touch devices, but the
+   native cursor is also explicitly restored here as a defensive fallback.
+========================================== */
+
+@media (pointer:fine){
+
+    body.has-custom-cursor,
+    body.has-custom-cursor a,
+    body.has-custom-cursor button{
+
+        cursor:none;
+
+    }
+
+}
+
+.custom-cursor{
+
+    position:fixed;
+
+    top:0;
+
+    left:0;
+
+    width:10px;
+
+    height:10px;
+
+    margin:-5px 0 0 -5px;
+
+    border-radius:50%;
+
+    background:var(--primary);
+
+    pointer-events:none;
+
+    z-index:10000;
+
+    will-change:transform;
+
+}
+
+.custom-cursor-ring{
+
+    position:fixed;
+
+    top:0;
+
+    left:0;
+
+    width:36px;
+
+    height:36px;
+
+    margin:-18px 0 0 -18px;
+
+    border-radius:50%;
+
+    border:1px solid var(--glass-border);
+
+    background:var(--glass-bg);
+
+    backdrop-filter:var(--glass-blur);
+
+    -webkit-backdrop-filter:var(--glass-blur);
+
+    pointer-events:none;
+
+    z-index:9999;
+
+    will-change:transform;
+
+    transition:width .3s, height .3s, margin .3s, border-color .3s, background .3s;
+
+}
+
+.custom-cursor-ring.is-active{
+
+    width:64px;
+
+    height:64px;
+
+    margin:-32px 0 0 -32px;
+
+    border-color:var(--primary);
+
+    background:rgba(139,92,246,.12);
+
+}
+
+.custom-cursor-ring.is-hidden,
+.custom-cursor.is-hidden{
+
+    opacity:0;
+
+}

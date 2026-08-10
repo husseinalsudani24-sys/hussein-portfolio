@@ -1,0 +1,169 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Navbar from "../../components/Navbar.astro";
+import Footer from "../../components/Footer.astro";
+import ReadingProgress from "../../components/ReadingProgress.astro";
+import { ArrowLeft } from "@lucide/astro";
+import { portfolio } from "../../data/portfolio";
+import { getRelativeLocaleUrl } from "astro:i18n";
+import { getTranslations, defaultLocale, type Locale } from "../../i18n";
+
+const project = portfolio.projects.find((p) => p.slug === "expandify-real-estate")!;
+const locale = (Astro.currentLocale ?? defaultLocale) as Locale;
+const t = getTranslations(locale);
+const c = t.caseStudies["expandify-real-estate"];
+const category = t.projectsData["expandify-real-estate"].category;
+const pagePath = "/projects/expandify-real-estate";
+const projectsHref = getRelativeLocaleUrl(locale, "projects");
+
+// Every fact on this page comes directly from the CV entry for this role.
+// No traffic, CPL, revenue or automation numbers are stated because the
+// CV doesn't give exact figures for them — only "low CPL" and "increasing
+// qualified lead volume" in qualitative terms, which is what's written below.
+
+const heroStats = [
+  { value: "2130", suffix: "%" },
+  { value: "90", suffix: "+" },
+  { value: "4", suffix: "" },
+];
+
+// Channel/tool names are product and platform names — unchanged across locales.
+const channels = ["Instagram", "YouTube", "Pinterest", "Facebook", "Meta Ads Manager", "Facebook Pixel"];
+
+const gallery = [
+  { gradient: "linear-gradient(135deg,#8b5cf6,#4f46e5)" },
+  { gradient: "linear-gradient(135deg,#4f46e5,#8b5cf6)" },
+  { gradient: "linear-gradient(135deg,#06b6d4,#4f46e5)" },
+];
+---
+
+<BaseLayout
+  title={`${c.metaTitle} | ${portfolio.personal.name}`}
+  description={c.metaDescription}
+  path={pagePath}
+>
+  <ReadingProgress />
+  <Navbar path={pagePath} />
+
+  <main id="main-content">
+    <section class="section case-hero">
+      <div class="case-hero-bg" aria-hidden="true"></div>
+
+      <div class="container case-hero-wrapper">
+        <a href={projectsHref} class="back-link">
+          <ArrowLeft size={16} stroke-width={2.5} aria-hidden="true" />
+          {t.caseStudy.backToProjects}
+        </a>
+
+        <span class="tag-badge">{category} &bull; {t.caseStudy.caseStudyBadge}</span>
+
+        <h1>{project.title}</h1>
+
+        <p class="lead">
+          {c.lead}
+        </p>
+
+        <dl class="hero-meta">
+          <div>
+            <dt>{t.caseStudy.roleLabel}</dt>
+            <dd>{c.roleValue}</dd>
+          </div>
+          <div>
+            <dt>{t.caseStudy.clientLabel}</dt>
+            <dd>{project.title}</dd>
+          </div>
+          <div>
+            <dt>{t.caseStudy.locationLabel}</dt>
+            <dd>{t.caseStudy.dubaiUae}</dd>
+          </div>
+          <div>
+            <dt>{t.caseStudy.durationLabel}</dt>
+            <dd>{c.durationValue}</dd>
+          </div>
+        </dl>
+
+        <div class="stat-grid" data-reveal>
+          {heroStats.map((stat, i) => (
+            <div class="stat-card">
+              <h3 class="count-up" data-count-to={stat.value} data-suffix={stat.suffix}>0</h3>
+              <span>{c.heroStats[i].label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-reveal>
+      <div class="container">
+        <span class="section-tag">{t.caseStudy.overviewTag}</span>
+        <h2>{c.overviewHeading}</h2>
+        <p class="section-intro">
+          {c.overviewText}
+        </p>
+      </div>
+    </section>
+
+    <section class="section" data-reveal>
+      <div class="container">
+        <span class="section-tag">{t.caseStudy.responsibilitiesTag}</span>
+        <h2>{c.responsibilitiesHeading}</h2>
+        <ul class="role-list">
+          {c.responsibilities.map((item) => (
+            <li>{item}</li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <section class="section" data-reveal>
+      <div class="container">
+        <span class="section-tag">{c.channelsTag}</span>
+        <h2>{c.channelsHeading}</h2>
+        <div class="tech-grid">
+          {channels.map((channel) => (
+            <span class="tech-pill">{channel}</span>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-reveal>
+      <div class="container">
+        <span class="section-tag">{t.caseStudy.galleryTag}</span>
+        <h2>{t.caseStudy.galleryHeading}</h2>
+        <p class="section-intro">
+          {c.galleryIntro}
+        </p>
+        <div class="gallery-grid">
+          {gallery.map((item, i) => (
+            <figure class="gallery-item">
+              <div class="gallery-visual" style={{ background: item.gradient }} aria-hidden="true"></div>
+              <figcaption>{c.gallery[i].label}</figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section cta" data-reveal>
+      <div class="container">
+        <span class="section-tag">{t.caseStudy.nextStepTag}</span>
+        <h2>{c.ctaHeading}</h2>
+        <p>
+          {c.ctaText}
+        </p>
+        <div class="cta-buttons">
+          <a href={`mailto:${portfolio.personal.email}`} class="btn">{t.caseStudy.startConversation}</a>
+          <a href={projectsHref} class="btn-outline">{t.caseStudy.viewMoreCaseStudies}</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<script>
+  import { initPageAnimations } from "../../scripts/animations";
+  initPageAnimations();
+</script>

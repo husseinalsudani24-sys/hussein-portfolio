@@ -1,0 +1,190 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import Navbar from "../../../components/Navbar.astro";
+import Footer from "../../../components/Footer.astro";
+import ReadingProgress from "../../../components/ReadingProgress.astro";
+import { ArrowLeft } from "@lucide/astro";
+import { portfolio } from "../../../data/portfolio";
+import { getRelativeLocaleUrl } from "astro:i18n";
+import { getTranslations, defaultLocale, type Locale } from "../../../i18n";
+
+const project = portfolio.projects.find((p) => p.slug === "cosmedent")!;
+const locale = (Astro.currentLocale ?? defaultLocale) as Locale;
+const t = getTranslations(locale);
+const c = t.caseStudies.cosmedent;
+const category = t.projectsData.cosmedent.category;
+const pagePath = "/projects/cosmedent";
+const projectsHref = getRelativeLocaleUrl(locale, "projects");
+
+// Every number below is stated exactly as it appears in the CV:
+// clicks +142%, impressions +186%, and the two specific keyword rank
+// changes. No other metric is implied or estimated.
+
+const heroStats = [
+  { value: "142", suffix: "%" },
+  { value: "186", suffix: "%" },
+];
+
+const keywordShifts = [
+  { from: "#28", to: "#8" },
+  { from: "#31", to: "#9" },
+];
+---
+
+<BaseLayout
+  title={`${c.metaTitle} | ${portfolio.personal.name}`}
+  description={c.metaDescription}
+  path={pagePath}
+>
+  <ReadingProgress />
+  <Navbar path={pagePath} />
+
+  <main id="main-content">
+    <section class="section case-hero">
+      <div class="case-hero-bg" aria-hidden="true"></div>
+
+      <div class="container case-hero-wrapper">
+        <a href={projectsHref} class="back-link">
+          <ArrowLeft size={16} stroke-width={2.5} aria-hidden="true" />
+          {t.caseStudy.backToProjects}
+        </a>
+
+        <span class="tag-badge">{category} &bull; {t.caseStudy.caseStudyBadge}</span>
+
+        <h1>{project.title}</h1>
+
+        <p class="lead">
+          {c.lead}
+        </p>
+
+        <dl class="hero-meta">
+          <div>
+            <dt>{t.caseStudy.roleLabel}</dt>
+            <dd>{c.roleValue}</dd>
+          </div>
+          <div>
+            <dt>{t.caseStudy.clientLabel}</dt>
+            <dd>{project.title}</dd>
+          </div>
+          <div>
+            <dt>{t.caseStudy.locationLabel}</dt>
+            <dd>{t.caseStudy.dubaiUae}</dd>
+          </div>
+          <div>
+            <dt>{t.caseStudy.durationLabel}</dt>
+            <dd>{c.durationValue}</dd>
+          </div>
+        </dl>
+
+        <div class="stat-grid" data-reveal>
+          {heroStats.map((stat, i) => (
+            <div class="stat-card">
+              <h3 class="count-up" data-count-to={stat.value} data-suffix={stat.suffix}>0</h3>
+              <span>{c.heroStats[i].label}</span>
+            </div>
+          ))}
+          <div class="stat-card">
+            <h3>{c.keywordRankingsExtraStat.value}</h3>
+            <span>{c.keywordRankingsExtraStat.label}</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-reveal>
+      <div class="container">
+        <span class="section-tag">{t.caseStudy.overviewTag}</span>
+        <h2>{c.overviewHeading}</h2>
+        <p class="section-intro">
+          {c.overviewText}
+        </p>
+      </div>
+    </section>
+
+    <section class="section" data-reveal>
+      <div class="container">
+        <span class="section-tag">{t.caseStudy.responsibilitiesTag}</span>
+        <h2>{c.responsibilitiesHeading}</h2>
+        <ul class="role-list">
+          {c.responsibilities.map((item) => (
+            <li>{item}</li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <section class="section" data-reveal>
+      <div class="container">
+        <span class="section-tag">{c.keywordRankingsTag}</span>
+        <h2>{c.keywordRankingsHeading}</h2>
+        <div class="card-grid">
+          {keywordShifts.map((item, i) => (
+            <article class="info-card">
+              <h3>{c.keywordShifts[i].keyword}</h3>
+              <p>{item.from} &rarr; {item.to}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-reveal>
+      <div class="container">
+        <span class="section-tag">{t.caseStudy.toolsTag}</span>
+        <h2>{t.caseStudy.whatWasUsedHeading}</h2>
+        <div class="tech-grid">
+          {c.tools.map((tool) => (
+            <span class="tech-pill">{tool}</span>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-reveal>
+      <div class="container">
+        <span class="section-tag">{t.caseStudy.galleryTag}</span>
+        <h2>{t.caseStudy.galleryHeading}</h2>
+        <p class="section-intro">
+          {c.galleryIntro}
+        </p>
+        <div class="gallery-grid">
+          {c.gallery.map((item, i) => (
+            <figure class="gallery-item">
+              <div
+                class="gallery-visual"
+                style={{
+                  background: i === 0
+                    ? "linear-gradient(135deg,#10b981,#4f46e5)"
+                    : "linear-gradient(135deg,#4f46e5,#10b981)",
+                }}
+                aria-hidden="true"
+              ></div>
+              <figcaption>{item.label}</figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section cta" data-reveal>
+      <div class="container">
+        <span class="section-tag">{t.caseStudy.nextStepTag}</span>
+        <h2>{c.ctaHeading}</h2>
+        <p>
+          {c.ctaText}
+        </p>
+        <div class="cta-buttons">
+          <a href={`mailto:${portfolio.personal.email}`} class="btn">{t.caseStudy.startConversation}</a>
+          <a href={projectsHref} class="btn-outline">{t.caseStudy.viewMoreCaseStudies}</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<script>
+  import { initPageAnimations } from "../../../scripts/animations";
+  initPageAnimations();
+</script>

@@ -1,0 +1,60 @@
+---
+import { portfolio } from "../data/portfolio";
+import { getTranslations, defaultLocale, type Locale } from "../i18n";
+
+const { testimonials } = portfolio;
+const locale = (Astro.currentLocale ?? defaultLocale) as Locale;
+const t = getTranslations(locale);
+---
+
+{testimonials.length > 0 && (
+  <section id="testimonials" class="section" data-reveal>
+    <div class="container">
+      <span class="section-tag">{t.testimonials.tag}</span>
+      <h2>{t.testimonials.heading}</h2>
+
+      <div class="testimonials-grid">
+        {testimonials.map((item) => (
+          <blockquote class="testimonial-card">
+            <p>&ldquo;{item.quote}&rdquo;</p>
+            <footer>
+              <strong>{item.name}</strong>
+              <span>{item.role} &middot; {item.company}</span>
+            </footer>
+          </blockquote>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
+<style>
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
+  }
+
+  /* Base glass surface, hover lift and animated border-glow are inherited
+     from the shared .testimonial-card rules in global.css. */
+  .testimonial-card {
+    padding: 32px;
+  }
+
+  .testimonial-card p {
+    color: var(--text);
+    font-size: 1.05rem;
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+
+  .testimonial-card footer strong {
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .testimonial-card footer span {
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+</style>
