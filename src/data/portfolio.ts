@@ -1,14 +1,15 @@
 export const portfolio = {
   personal: {
     name: "Hussein Al Sudani",
-    title: "AI Automation Architect",
-    roles: ["AI Automation Architect", "SEO Strategist", "Performance Marketing Specialist"],
+    title: "Digital & Performance Marketing Specialist",
+    roles: ["Digital & Performance Marketing Specialist", "SEO & Paid Media", "Marketing Automation"],
     location: "Dubai, UAE",
     email: "husseinalsudani24@gmail.com",
     phone: "+971524900556",
-    website: "https://yourwebsite.com",
+    website: "https://hussein-portfolio-xi.vercel.app",
     linkedin: "https://www.linkedin.com/in/hussein-al-sudani-1a37a52b6/",
     github: "https://github.com/husseinalsudani24-sys",
+    instagram: "https://www.instagram.com/huss.alsudani/",
     // Used across the site, rendered inside a CSS circular frame (see
     // Portrait.astro) — plain rectangular source, no baked-in crop.
     photo: "/images/profile.webp",
@@ -34,8 +35,12 @@ export const portfolio = {
   ],
 
   // "Key Results at a Glance" from the CV — verified, not illustrative.
+  // Open issue (resolve in the CV before publishing): the CV's "Key Results"
+  // line calls Miled Andos' 212% "organic traffic growth", but its
+  // experience section says 212% is impression growth. The site follows the
+  // experience section.
   results: [
-    { value: "212", suffix: "%", label: "Organic traffic growth (Miled Andos)" },
+    { value: "212", suffix: "%", label: "Organic impression growth (Miled Andos)" },
     { value: "21.7", suffix: "K+", label: "Instagram followers built from 0 (Luci Luna)" },
     { value: "2130", suffix: "%", label: "Real estate Instagram growth (Expandify)" },
     { value: "142", suffix: "%", label: "Organic click increase (Cosmedent)" },
@@ -107,16 +112,17 @@ export const portfolio = {
       image: "/images/projects/luci-luna.webp",
     },
     {
-      slug: "ardon-group",
-      category: "Web Development",
-      title: "Ardon Group",
+      slug: "lahthaty",
+      category: "Website Development, SEO & Tracking",
+      title: "Lahthaty",
       description:
-        "A luxury real estate website built from scratch in Next.js, TypeScript and Tailwind CSS, with custom cursor interactions and scroll-driven animations.",
-      tags: ["Next.js", "TypeScript", "Tailwind CSS"],
-      gradient: "linear-gradient(135deg,#8b5cf6,#06b6d4)",
-      // No official website could be verified for this client — premium
-      // abstract cover instead. See PROJECT_THUMBNAILS.md.
-      image: "/images/projects/ardon-group.webp",
+        "Website development, on-page and technical SEO, and Meta Pixel, GA4, Search Console and Tag Manager setup for lahthaty.com, an Iraqi events and weddings platform.",
+      tags: ["Web Development", "Technical SEO", "GA4 & GTM"],
+      gradient: "linear-gradient(135deg,#f59e0b,#4f46e5)",
+      // Real screenshot of lahthaty.com's homepage (1440×900 @2x, Playwright)
+      // — see PROJECT_THUMBNAILS.md.
+      image: "/images/projects/lahthaty.webp",
+      url: "https://lahthaty.com/index.php",
     },
     {
       slug: "ai-automation",

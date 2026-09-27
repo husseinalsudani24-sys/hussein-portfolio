@@ -15,9 +15,9 @@
 export const en = {
   meta: {
     home: {
-      title: "Hussein Al Sudani | AI Automation Architect",
+      title: "Hussein Al Sudani | Digital & Performance Marketing Specialist",
       description:
-        "AI Automation Architect, SEO Strategist and Performance Marketing specialist based in Dubai, UAE.",
+        "Digital & Performance Marketing Specialist in Dubai, UAE — SEO, paid media and marketing automation for real estate, beauty and medical brands.",
     },
     projects: {
       title: "Projects",
@@ -37,15 +37,13 @@ export const en = {
 
   hero: {
     description:
-      "Building AI Automation Systems, SEO Strategies and Performance Marketing that help businesses scale faster.",
+      "Driving measurable growth through SEO, paid media and marketing automation for real estate, beauty and medical brands in Dubai.",
     viewProjects: "View Projects",
     downloadCv: "Download CV",
     contactMe: "Contact Me",
     statYears: "Years",
-    statProjects: "Projects",
-    statAutomations: "Automations",
     // Parallel to portfolio.personal.roles, same order.
-    roles: ["AI Automation Architect", "SEO Strategist", "Performance Marketing Specialist"],
+    roles: ["Digital & Performance Marketing Specialist", "SEO & Paid Media", "Marketing Automation"],
   },
 
   companies: {
@@ -65,12 +63,10 @@ export const en = {
     tag: "About Me",
     heading: "Building Growth Through AI & Strategy",
     paragraph1:
-      "I'm Hussein Al Sudani, an AI Automation Architect, SEO Strategist, and Performance Marketing Specialist based in Dubai.",
+      "I'm Hussein Al Sudani, a Digital & Performance Marketing Specialist based in Dubai with 4+ years driving measurable growth across SEO, paid media, social media and marketing automation in the real estate, beauty and medical sectors.",
     paragraph2:
-      "I build AI workflows, SEO systems, high-converting marketing funnels, and scalable digital solutions for modern businesses.",
+      "I'm Google Ads Search & Display certified, and work hands-on with GA4, Google Search Console, WordPress, CRM and AI-driven automation with n8n and Claude AI agents.",
     statYearsLabel: "Years Experience",
-    statProjectsLabel: "Projects Delivered",
-    statAutomationsLabel: "AI Automations",
     statSeoLabel: "Performance Expert",
   },
 
@@ -80,7 +76,7 @@ export const en = {
     intro: "Verified outcomes pulled directly from real client engagements — not projections.",
     // Parallel to portfolio.results, same order.
     labels: [
-      "Organic traffic growth (Miled Andos)",
+      "Organic impression growth (Miled Andos)",
       "Instagram followers built from 0 (Luci Luna)",
       "Real estate Instagram growth (Expandify)",
       "Organic click increase (Cosmedent)",
@@ -105,28 +101,28 @@ export const en = {
     heading: "Core Skills & Technologies",
     items: [
       {
-        title: "AI Automation",
-        description: "n8n • Claude AI Agents • WhatsApp Business API • Workflow Automation",
+        title: "Performance Marketing",
+        description: "Google Ads (Search & Display) • Meta Ads & Retargeting • Facebook Pixel • A/B Testing • Budget & ROAS Optimisation • CPL Reduction",
       },
       {
         title: "SEO",
-        description: "Technical SEO • Local SEO • Schema Markup • Domain Migration",
+        description: "Technical SEO • On-Page SEO • Local SEO • Keyword Research • Schema Markup • Domain Migration",
       },
       {
-        title: "Performance Marketing",
-        description: "Google Ads • Meta Ads & Retargeting • Facebook Pixel • CPL Reduction",
+        title: "Analytics & Tracking",
+        description: "GA4 • Google Search Console • Conversion Tracking • UTM Parameters • Funnel Analysis • Performance Reporting",
       },
       {
         title: "Social & Content",
-        description: "Instagram Growth (0→21.7K) • Content Strategy • TikTok • YouTube",
+        description: "Instagram Growth (0→21.7K) • TikTok • YouTube • Pinterest • Facebook • Content Strategy • Community Management",
       },
       {
-        title: "Development",
-        description: "Next.js • TypeScript • Tailwind CSS • WordPress • Astro",
+        title: "Marketing Technology",
+        description: "WordPress • Next.js • TypeScript • Tailwind CSS • Astro • CRM Integration • n8n • WhatsApp Business API",
       },
       {
-        title: "Analytics",
-        description: "GA4 • Search Console • Conversion Tracking • Funnel Analysis",
+        title: "AI & Automation",
+        description: "AI Prompt Engineering • Claude AI (Code & Agents) • Workflow Automation • AI-Assisted Content Production",
       },
     ],
   },
@@ -142,7 +138,9 @@ export const en = {
         points: [
           "Scaled brand Instagram from 30 to 669+ followers (+2,130%) via a structured organic growth and Instagram SEO strategy.",
           "Directed multi-platform content expansion across Instagram, YouTube, Pinterest and Facebook, publishing 90+ branded assets.",
-          "Managed Meta Ads for the Dubai luxury real estate market and engineered Facebook Pixel retargeting infrastructure from scratch.",
+          "Managed Meta Ads campaigns for the Dubai luxury real estate market, sustaining low CPL while increasing qualified lead volume.",
+          "Engineered Facebook Pixel and website retargeting infrastructure from scratch, enabling warm retargeting funnels for buyers.",
+          "Produced luxury property walkthrough video content and delivered weekly ROI and performance reports to senior stakeholders.",
         ],
       },
       {
@@ -153,6 +151,7 @@ export const en = {
           "Executed a full domain migration (.com → .ae) with zero organic ranking loss, managing WordPress, redirects and reindexing.",
           "Advanced competitive keywords from page 3 to page 1 — \"dentist in Dubai\" #28 → #8, \"dental clinic Dubai\" #31 → #9.",
           "Grew organic clicks by 142% and impressions by 186% within 6 months, verified in Google Search Console.",
+          "Delivered a technical SEO audit covering meta optimisation, internal linking and mobile responsiveness across key pages.",
         ],
       },
       {
@@ -163,6 +162,7 @@ export const en = {
           "Built a custom WordPress site and executed a domain migration (.com → .ae) with a complete local SEO strategy.",
           "Secured #1 Google rankings for core brand keywords and top-10 rankings for \"salon in Dubai\" and \"beauty salon in Dubai.\"",
           "Increased organic clicks by 127% and impressions by 212% in 6 months, directly driving appointment bookings.",
+          "Maintain ongoing SEO, social content calendars and community management to sustain brand growth and loyalty.",
         ],
       },
       {
@@ -173,6 +173,7 @@ export const en = {
           "Grew the salon's Instagram from 0 to 21,700+ followers through premium brand identity, content pillars and Reels.",
           "Managed Meta Ads and Google Ads campaigns, delivering a 30% increase in lead generation via segmentation and budget optimisation.",
           "Applied GA4 to analyse user behaviour and funnel drop-offs, refining targeting and landing pages to lift conversion rate.",
+          "Owned website UX, media library and brand consistency across all digital channels.",
         ],
       },
     ],
@@ -181,12 +182,14 @@ export const en = {
   certifications: {
     tag: "Credentials",
     heading: "Certifications",
-    intro: "Formal training and certification across paid media, SEO, AI, security and creative tooling.",
+    intro: "Formal training and certification across paid media, SEO, digital marketing, AI & automation, security and creative tooling.",
     viewFull: "View Full Certificate",
     verify: "Verify Credential",
     issued: "Issued",
     expires: "Expires",
     credentialId: "Credential ID",
+    holder: "Certificate holder",
+    viewOriginal: "View Original (PDF)",
     skillsCovered: "Skills covered",
     close: "Close",
     // Category ids from src/data/certifications.ts, mapped to display labels.
@@ -209,7 +212,7 @@ export const en = {
     tag: "Contact",
     heading: "Let's Build Something Great",
     description:
-      "I'm available for AI Automation, SEO, Performance Marketing, and Web Development projects worldwide.",
+      "I'm available for performance marketing, SEO, paid media and marketing automation projects worldwide.",
     emailMe: "Email Me",
     callMe: "Call Me",
     linkedin: "LinkedIn",
@@ -219,7 +222,7 @@ export const en = {
   footer: {
     ctaHeading: "Have a project in mind?",
     ctaButton: "Let's Talk",
-    tagline: "AI Automation Architect • SEO Strategist • Performance Marketing",
+    tagline: "Digital & Performance Marketing • SEO • Paid Media • Marketing Automation",
     linkAbout: "About",
     linkProjects: "Projects",
     linkSkills: "Skills",
@@ -268,11 +271,11 @@ export const en = {
         "Social media growth and paid media management for a Dubai beauty salon — Instagram built from 0 to 21,700+ followers alongside a 30% lift in lead generation.",
       tags: ["Instagram Growth", "Meta Ads", "Google Ads"],
     },
-    "ardon-group": {
-      category: "Web Development",
+    lahthaty: {
+      category: "Website Development, SEO & Tracking",
       description:
-        "A luxury real estate website built from scratch in Next.js, TypeScript and Tailwind CSS, with custom cursor interactions and scroll-driven animations.",
-      tags: ["Next.js", "TypeScript", "Tailwind CSS"],
+        "Website development, on-page and technical SEO, and Meta Pixel, GA4, Search Console and Tag Manager setup for lahthaty.com, an events and weddings platform in Iraq.",
+      tags: ["Web Development", "Technical SEO", "GA4 & GTM"],
     },
     "ai-automation": {
       category: "AI Automation — In Progress",
@@ -308,6 +311,8 @@ export const en = {
     inDevelopment: "In Development",
     dubaiUae: "Dubai, UAE",
     present: "Present",
+    websiteLabel: "Website",
+    visitWebsite: "Visit Website",
   },
 
   // Bespoke, per-project case-study copy. Fields not needed by a given
@@ -470,28 +475,36 @@ export const en = {
         "I build brand identity, content systems and paid media strategy for businesses that need to grow an audience from the ground up.",
     },
 
-    "ardon-group": {
-      metaTitle: "Ardon Group Case Study",
+    lahthaty: {
+      metaTitle: "Lahthaty Case Study",
       metaDescription:
-        "A luxury real estate website built from scratch in Next.js, TypeScript and Tailwind CSS, with custom cursor interactions and scroll-driven animations.",
+        "Website development, SEO and tracking for lahthaty.com — site structure, page speed and mobile improvements, on-page and technical SEO, and Meta Pixel, GA4, Search Console and Tag Manager setup.",
       lead:
-        "A luxury real estate website built from scratch — no template, no page builder — in Next.js, TypeScript and Tailwind CSS.",
-      roleValue: "Web Developer",
+        "Website development, SEO and tracking for lahthaty.com, an events and weddings platform in Iraq — improving the site itself, building its search foundations and putting measurement in place.",
+      roleValue: "Web Development, SEO & Tracking",
       yearValue: "2026",
-      stackValue: "Next.js · TypeScript · Tailwind CSS",
-      overviewHeading: "A Custom Build, Not a Template",
+      stackValue: "SEO · Meta Pixel · GA4 · GTM",
+      challengeTag: "The Challenge",
+      overviewHeading: "Improving the Site, Its Visibility and Its Measurement",
       overviewText:
-        "A luxury real estate website built entirely from scratch in Next.js, TypeScript and Tailwind CSS — including custom cursor interactions and scroll-driven animations, rather than assembled from an existing template or page builder.",
-      featuresTag: "What Was Built",
-      featuresHeading: "Key Features",
-      features: [
-        "Built from scratch — no template or page builder.",
-        "Custom cursor interactions.",
-        "Scroll-driven animations.",
+        "Lahthaty (لحظاتي) is a platform where people in Iraq compare venues, photography, catering and other event services. The work set out to improve the site's structure, page speed and mobile responsiveness, build an on-page and technical SEO foundation to grow organic visibility, and put conversion tracking and analytics in place for data-driven reporting and Meta Ads retargeting.",
+      roleTag: "My Role",
+      roleHeading: "What I Delivered",
+      roleText: "I developed and optimised the website end-to-end, and owned its SEO strategy and tracking setup.",
+      deliverables: [
+        "Developed and optimised the lahthaty.com website end-to-end, improving site structure, page speed and mobile responsiveness for a better user experience.",
+        "Implemented an on-page and technical SEO strategy — keyword optimisation, meta tags, schema markup and internal linking — to grow organic visibility.",
+        "Installed and configured the Meta (Facebook) Pixel to enable conversion tracking and retargeting audiences across Meta Ads campaigns.",
+        "Integrated Google Analytics 4 (GA4), Google Search Console and Google Tag Manager for performance tracking and data-driven reporting.",
       ],
-      tools: ["Next.js", "TypeScript", "Tailwind CSS"],
-      ctaHeading: "Need a Custom-Built Site, Not a Template?",
-      ctaText: "I build production websites from scratch in Next.js and Astro when a template can't deliver what a brand actually needs.",
+      tools: ["Web Development", "Technical SEO", "Schema Markup", "Meta Pixel", "Google Analytics 4", "Google Search Console", "Google Tag Manager"],
+      galleryIntro: "Screenshots of the live lahthaty.com homepage, captured in September 2026.",
+      gallery: [
+        { label: "Homepage — desktop" },
+        { label: "Homepage — mobile" },
+      ],
+      ctaHeading: "Need a Site That's Built to Be Found and Measured?",
+      ctaText: "I build and optimise websites with SEO and tracking set up from the start, so performance can be measured instead of guessed.",
     },
 
     "ai-automation": {

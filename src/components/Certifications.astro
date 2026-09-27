@@ -1,8 +1,10 @@
 ---
-import { Expand, ExternalLink, ShieldCheck, X, Calendar, Hash } from "@lucide/astro";
+import { Expand, ExternalLink, ShieldCheck, X, Calendar, Hash, FileText, User } from "@lucide/astro";
 import { siGoogle, siGoogleads } from "simple-icons";
 import { certifications } from "../data/certifications";
 import { getTranslations, defaultLocale, type Locale } from "../i18n";
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 
 const locale = (Astro.currentLocale ?? defaultLocale) as Locale;
 const t = getTranslations(locale);
@@ -17,6 +19,12 @@ const issuerIcon: Record<string, { path: string; hex: string } | undefined> = {
   "google-ads-search": siGoogleads,
   "google-digital-marketing-fundamentals": siGoogle,
 };
+
+// Checked at build time against /public, so a certificate whose scan or
+// original file hasn't been supplied yet renders as a text-only card —
+// no broken <img>, no zoom button, no dead file link — while its real
+// data (title, issuer, date, ID) still shows.
+const inPublic = (path?: string) => !!path && existsSync(join(process.cwd(), "public", path));
 ---
 
 <section id="certifications" class="section" data-reveal>
@@ -30,8 +38,11 @@ const issuerIcon: Record<string, { path: string; hex: string } | undefined> = {
     <div class="cert-grid">
       {certifications.map((cert) => {
         const icon = issuerIcon[cert.slug];
+        const hasImage = inPublic(cert.image);
+        const hasFile = inPublic(cert.file);
         return (
           <div class="cert-card" data-cert={cert.slug}>
+            {hasImage ? (
             <button
               type="button"
               class="cert-thumb"
@@ -55,6 +66,24 @@ const issuerIcon: Record<string, { path: string; hex: string } | undefined> = {
                 {t.certifications.categories[cert.category]}
               </span>
             </button>
+            ) : (
+            <div class="cert-thumb cert-thumb-text">
+              <div class="cert-text-panel" aria-hidden="true">
+                {icon ? (
+                  <svg class="cert-text-mark" viewBox="0 0 24 24" width="40" height="40" fill={`#${icon.hex}`}>
+                    <path d={icon.path} />
+                  </svg>
+                ) : (
+                  <span class="cert-text-mark cert-text-monogram">{cert.issuer.charAt(0)}</span>
+                )}
+                <span class="cert-text-issuer">{cert.issuer}</span>
+                {cert.issueDate && <span class="cert-text-date">{cert.issueDate}</span>}
+              </div>
+              <span class="cert-category" data-category={cert.category}>
+                {t.certifications.categories[cert.category]}
+              </span>
+            </div>
+            )}
 
             <div class="cert-body">
               <div class="cert-issuer-row">
@@ -83,6 +112,12 @@ const issuerIcon: Record<string, { path: string; hex: string } | undefined> = {
                     {cert.credentialId}
                   </span>
                 )}
+                {cert.holder && (
+                  <span class="cert-meta-item">
+                    <User size={13} stroke-width={2} aria-hidden="true" />
+                    {t.certifications.holder}: <bdi>{cert.holder}</bdi>
+                  </span>
+                )}
               </div>
 
               {cert.skills && cert.skills.length > 0 && (
@@ -94,10 +129,24 @@ const issuerIcon: Record<string, { path: string; hex: string } | undefined> = {
               )}
 
               <div class="cert-actions">
-                <button type="button" class="cert-action cert-action-primary" data-cert-trigger={cert.slug}>
-                  <Expand size={15} stroke-width={2.5} aria-hidden="true" />
-                  {t.certifications.viewFull}
-                </button>
+                {hasImage && (
+                  <button type="button" class="cert-action cert-action-primary" data-cert-trigger={cert.slug}>
+                    <Expand size={15} stroke-width={2.5} aria-hidden="true" />
+                    {t.certifications.viewFull}
+                  </button>
+                )}
+                {hasFile && (
+                  <a
+                    href={cert.file}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="cert-action cert-action-verify"
+                  >
+                    <FileText size={15} stroke-width={2.5} aria-hidden="true" />
+                    {t.certifications.viewOriginal}
+                    <ExternalLink size={12} stroke-width={2.5} aria-hidden="true" />
+                  </a>
+                )}
                 {cert.verifyUrl && (
                   <a
                     href={cert.verifyUrl}
@@ -176,6 +225,57 @@ const issuerIcon: Record<string, { path: string; hex: string } | undefined> = {
     object-fit: cover;
     display: block;
     transition: transform 0.5s ease;
+  }
+
+  /* Text-only fallback for certificates without a supplied scan: same 4:3
+     frame as the image thumbnails so the grid stays even. */
+  .cert-thumb-text {
+    cursor: default;
+    background:
+      radial-gradient(120% 90% at 50% 0%, rgba(139, 92, 246, 0.16), transparent 70%),
+      var(--surface-2);
+  }
+
+  .cert-text-panel {
+    position: absolute;
+    inset: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 40px 20px 20px;
+    border: 1px dashed var(--border-strong);
+    border-radius: calc(var(--radius) - 6px);
+    text-align: center;
+  }
+
+  .cert-text-mark {
+    flex-shrink: 0;
+  }
+
+  .cert-text-monogram {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(139, 92, 246, 0.18);
+    color: var(--primary);
+    font-size: 1.4rem;
+    font-weight: 800;
+  }
+
+  .cert-text-issuer {
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1.35;
+  }
+
+  .cert-text-date {
+    color: var(--muted);
+    font-size: 0.8rem;
   }
 
   .cert-card:hover .cert-thumb-img {

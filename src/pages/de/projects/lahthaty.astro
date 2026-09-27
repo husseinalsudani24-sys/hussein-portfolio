@@ -1,0 +1,204 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import Navbar from "../../../components/Navbar.astro";
+import Footer from "../../../components/Footer.astro";
+import ReadingProgress from "../../../components/ReadingProgress.astro";
+import { ArrowLeft, ExternalLink } from "@lucide/astro";
+import { portfolio } from "../../../data/portfolio";
+import { getRelativeLocaleUrl } from "astro:i18n";
+import { getTranslations, defaultLocale, type Locale } from "../../../i18n";
+
+const project = portfolio.projects.find((p) => p.slug === "lahthaty")!;
+const locale = (Astro.currentLocale ?? defaultLocale) as Locale;
+const t = getTranslations(locale);
+const c = t.caseStudies.lahthaty;
+const category = t.projectsData.lahthaty.category;
+const pagePath = "/projects/lahthaty";
+const projectsHref = getRelativeLocaleUrl(locale, "projects");
+const websiteUrl = project.url!;
+
+// The CV lists this project's scope (site development and optimisation,
+// on-page/technical SEO, Meta Pixel, GA4, Search Console, GTM) but no
+// metrics — so the page lists the work done, and no growth, ranking, sales
+// or speed figures appear here. Gallery images are real captures of the live homepage
+// (see PROJECT_THUMBNAILS.md).
+const galleryImages = [
+  { src: "/images/projects/lahthaty/desktop.webp", width: 1600, height: 1000, fit: "cover" },
+  { src: "/images/projects/lahthaty/mobile.webp", width: 540, height: 1098, fit: "contain" },
+];
+---
+
+<BaseLayout
+  title={`${c.metaTitle} | ${portfolio.personal.name}`}
+  description={c.metaDescription}
+  path={pagePath}
+>
+  <ReadingProgress />
+  <Navbar path={pagePath} />
+
+  <main id="main-content">
+    <section class="section case-hero">
+      <div class="case-hero-bg" aria-hidden="true"></div>
+
+      <div class="container case-hero-wrapper">
+        <a href={projectsHref} class="back-link">
+          <ArrowLeft size={16} stroke-width={2.5} aria-hidden="true" />
+          {t.caseStudy.backToProjects}
+        </a>
+
+        <span class="tag-badge">{category} &bull; {t.caseStudy.caseStudyBadge}</span>
+
+        <h1>{project.title}</h1>
+
+        <p class="lead">
+          {c.lead}
+        </p>
+
+        <dl class="hero-meta">
+          <div>
+            <dt>{t.caseStudy.roleLabel}</dt>
+            <dd>{c.roleValue}</dd>
+          </div>
+          <div>
+            <dt>{t.caseStudy.clientLabel}</dt>
+            <dd>{project.title}</dd>
+          </div>
+          <div>
+            <dt>{t.caseStudy.yearLabel}</dt>
+            <dd>{c.yearValue}</dd>
+          </div>
+          <div>
+            <dt>{t.caseStudy.websiteLabel}</dt>
+            <dd>
+              <a href={websiteUrl} target="_blank" rel="noopener noreferrer" class="website-link">
+                <bdi>lahthaty.com</bdi>
+                <ExternalLink size={13} stroke-width={2.5} aria-hidden="true" />
+              </a>
+            </dd>
+          </div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="section" data-reveal>
+      <div class="container">
+        <span class="section-tag">{c.challengeTag}</span>
+        <h2>{c.overviewHeading}</h2>
+        <p class="section-intro">
+          {c.overviewText}
+        </p>
+      </div>
+    </section>
+
+    <section class="section" data-reveal>
+      <div class="container">
+        <span class="section-tag">{c.roleTag}</span>
+        <h2>{c.roleHeading}</h2>
+        <p class="section-intro">
+          {c.roleText}
+        </p>
+        <ul class="role-list">
+          {c.deliverables.map((item) => (
+            <li>{item}</li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <section class="section" data-reveal>
+      <div class="container">
+        <span class="section-tag">{t.caseStudy.techStackTag}</span>
+        <h2>{t.caseStudy.technologiesHeading}</h2>
+        <div class="tech-grid">
+          {c.tools.map((tool) => (
+            <span class="tech-pill">{tool}</span>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-reveal>
+      <div class="container">
+        <span class="section-tag">{t.caseStudy.galleryTag}</span>
+        <h2>{t.caseStudy.galleryHeading}</h2>
+        <p class="section-intro">
+          {c.galleryIntro}
+        </p>
+        <div class="gallery-grid">
+          {c.gallery.map((item, i) => (
+            <figure class="gallery-item">
+              <div class="gallery-visual gallery-shot">
+                <img
+                  src={galleryImages[i].src}
+                  alt={`${project.title} — ${item.label}`}
+                  width={galleryImages[i].width}
+                  height={galleryImages[i].height}
+                  loading="lazy"
+                  decoding="async"
+                  style={{ objectFit: galleryImages[i].fit }}
+                />
+              </div>
+              <figcaption>{item.label}</figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section cta" data-reveal>
+      <div class="container">
+        <span class="section-tag">{t.caseStudy.nextStepTag}</span>
+        <h2>{c.ctaHeading}</h2>
+        <p>
+          {c.ctaText}
+        </p>
+        <div class="cta-buttons">
+          <a href={`mailto:${portfolio.personal.email}`} class="btn">{t.caseStudy.startConversation}</a>
+          <a href={websiteUrl} target="_blank" rel="noopener noreferrer" class="btn-outline">{t.caseStudy.visitWebsite}</a>
+          <a href={projectsHref} class="btn-outline">{t.caseStudy.viewMoreCaseStudies}</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .website-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .website-link:hover {
+    color: var(--primary);
+  }
+
+  /* Real screenshots instead of the gradient placeholders other case
+     studies use — taller frame so the capture stays legible. */
+  .gallery-shot {
+    height: auto;
+    aspect-ratio: 16 / 10;
+    background: var(--surface-2);
+  }
+
+  .gallery-shot img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-position: top center;
+  }
+
+  .gallery-shot::after {
+    display: none;
+  }
+</style>
+
+<script>
+  import { initPageAnimations } from "../../../scripts/animations";
+  initPageAnimations();
+</script>

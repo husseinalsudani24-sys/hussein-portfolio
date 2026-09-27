@@ -28,10 +28,24 @@ export interface Certification {
   expiryDate?: string;
   credentialId?: string;
   verifyUrl?: string;
+  /** Path to the original certificate file (e.g. the issuer's PDF), relative to /public. */
+  file?: string;
+  /** Name exactly as printed on the certificate, when it differs from the site's display name. */
+  holder?: string;
   skills?: string[];
 }
 
 export const certifications: Certification[] = [
+  {
+    slug: "n8n-essentials-your-first-workflows",
+    title: "Essentials: Your First Workflows",
+    issuer: "n8n Academy",
+    category: "ai",
+    image: "/images/certifications/n8n-essentials-your-first-workflows.webp",
+    file: "/certificates/n8n-essentials-your-first-workflows.pdf",
+    issueDate: "September 9, 2026",
+    holder: "HUSSEIN JAMEEL KADHIM",
+  },
   {
     slug: "google-ads-display",
     title: "Google Ads Display Certification",

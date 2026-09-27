@@ -18,9 +18,9 @@ import type { Translation } from "./en";
 export const de: Translation = {
   meta: {
     home: {
-      title: "Hussein Al Sudani | KI-Automatisierungsarchitekt",
+      title: "Hussein Al Sudani | Digital- & Performance-Marketing-Spezialist",
       description:
-        "KI-Automatisierungsarchitekt, SEO-Stratege und Performance-Marketing-Spezialist mit Sitz in Dubai, VAE.",
+        "Digital- & Performance-Marketing-Spezialist in Dubai, VAE — SEO, Paid Media und Marketing-Automatisierung für Marken aus Immobilien, Beauty und Medizin.",
     },
     projects: {
       title: "Projekte",
@@ -40,14 +40,12 @@ export const de: Translation = {
 
   hero: {
     description:
-      "Ich entwickle KI-Automatisierungssysteme, SEO-Strategien und Performance-Marketing-Kampagnen, die Unternehmen helfen, schneller zu wachsen.",
+      "Messbares Wachstum durch SEO, Paid Media und Marketing-Automatisierung für Immobilien-, Beauty- und Medizinmarken in Dubai.",
     viewProjects: "Projekte ansehen",
     downloadCv: "Lebenslauf herunterladen",
     contactMe: "Kontakt aufnehmen",
     statYears: "Jahre",
-    statProjects: "Projekte",
-    statAutomations: "Automatisierungen",
-    roles: ["KI-Automatisierungsarchitekt", "SEO-Stratege", "Performance-Marketing-Spezialist"],
+    roles: ["Digital- & Performance-Marketing-Spezialist", "SEO & Paid Media", "Marketing-Automatisierung"],
   },
 
   companies: {
@@ -64,12 +62,10 @@ export const de: Translation = {
     tag: "Über mich",
     heading: "Wachstum durch KI & Strategie",
     paragraph1:
-      "Ich bin Hussein Al Sudani, ein KI-Automatisierungsarchitekt, SEO-Stratege und Performance-Marketing-Spezialist mit Sitz in Dubai.",
+      "Ich bin Hussein Al Sudani, Digital- & Performance-Marketing-Spezialist mit Sitz in Dubai und über 4 Jahren Erfahrung darin, messbares Wachstum über SEO, Paid Media, Social Media und Marketing-Automatisierung in den Bereichen Immobilien, Beauty und Medizin zu erzielen.",
     paragraph2:
-      "Ich entwickle KI-Workflows, SEO-Systeme, konversionsstarke Marketing-Funnels und skalierbare digitale Lösungen für moderne Unternehmen.",
+      "Ich bin für Google Ads Search & Display zertifiziert und arbeite praktisch mit GA4, Google Search Console, WordPress, CRM sowie KI-gestützter Automatisierung mit n8n und Claude-KI-Agenten.",
     statYearsLabel: "Jahre Erfahrung",
-    statProjectsLabel: "Abgeschlossene Projekte",
-    statAutomationsLabel: "KI-Automatisierungen",
     statSeoLabel: "Performance-Experte",
   },
 
@@ -78,7 +74,7 @@ export const de: Translation = {
     heading: "Ergebnisse & Kennzahlen",
     intro: "Verifizierte Ergebnisse direkt aus realen Kundenprojekten — keine Prognosen.",
     labels: [
-      "Wachstum des organischen Traffics (Miled Andos)",
+      "Wachstum organischer Impressionen (Miled Andos)",
       "Instagram-Follower von 0 aufgebaut (Luci Luna)",
       "Instagram-Wachstum im Immobilienbereich (Expandify)",
       "Anstieg organischer Klicks (Cosmedent)",
@@ -103,28 +99,28 @@ export const de: Translation = {
     heading: "Kernkompetenzen & Technologien",
     items: [
       {
-        title: "KI-Automatisierung",
-        description: "n8n • Claude-KI-Agenten • WhatsApp Business API • Workflow-Automatisierung",
+        title: "Performance-Marketing",
+        description: "Google Ads (Search & Display) • Meta Ads & Retargeting • Facebook Pixel • A/B-Tests • Budget- & ROAS-Optimierung • CPL-Reduzierung",
       },
       {
         title: "SEO",
-        description: "Technisches SEO • Lokales SEO • Schema-Markup • Domain-Migration",
+        description: "Technisches SEO • On-Page-SEO • Lokales SEO • Keyword-Recherche • Schema-Markup • Domain-Migration",
       },
       {
-        title: "Performance-Marketing",
-        description: "Google Ads • Meta Ads & Retargeting • Facebook Pixel • CPL-Reduzierung",
+        title: "Analytics & Tracking",
+        description: "GA4 • Google Search Console • Conversion-Tracking • UTM-Parameter • Funnel-Analyse • Performance-Reporting",
       },
       {
         title: "Social Media & Content",
-        description: "Instagram-Wachstum (0→21,7K) • Content-Strategie • TikTok • YouTube",
+        description: "Instagram-Wachstum (0→21,7K) • TikTok • YouTube • Pinterest • Facebook • Content-Strategie • Community-Management",
       },
       {
-        title: "Entwicklung",
-        description: "Next.js • TypeScript • Tailwind CSS • WordPress • Astro",
+        title: "Marketing-Technologie",
+        description: "WordPress • Next.js • TypeScript • Tailwind CSS • Astro • CRM-Integration • n8n • WhatsApp Business API",
       },
       {
-        title: "Analytics",
-        description: "GA4 • Search Console • Conversion-Tracking • Funnel-Analyse",
+        title: "KI & Automatisierung",
+        description: "AI Prompt Engineering • Claude AI (Code & Agenten) • Workflow-Automatisierung • KI-gestützte Content-Produktion",
       },
     ],
   },
@@ -140,7 +136,9 @@ export const de: Translation = {
         points: [
           "Instagram-Follower der Marke durch eine strukturierte organische Wachstumsstrategie und Instagram-SEO von 30 auf über 669 (+2.130 %) gesteigert.",
           "Plattformübergreifende Content-Expansion über Instagram, YouTube, Pinterest und Facebook geleitet und dabei über 90 Marken-Assets veröffentlicht.",
-          "Meta-Ads-Kampagnen für den Luxusimmobilienmarkt in Dubai verwaltet und die Facebook-Pixel-Retargeting-Infrastruktur von Grund auf entwickelt.",
+          "Meta-Ads-Kampagnen für den Luxusimmobilienmarkt in Dubai verwaltet, dabei niedrige Kosten pro Lead gehalten und gleichzeitig das Volumen qualifizierter Leads gesteigert.",
+          "Facebook-Pixel- und Website-Retargeting-Infrastruktur von Grund auf entwickelt und damit warme Retargeting-Funnels für Käufer ermöglicht.",
+          "Video-Walkthroughs für Luxusimmobilien produziert und wöchentliche ROI- und Performance-Berichte für das Senior-Management erstellt.",
         ],
       },
       {
@@ -151,6 +149,7 @@ export const de: Translation = {
           "Vollständige Domain-Migration (.com → .ae) ohne Verlust im organischen Ranking durchgeführt, inklusive WordPress, Weiterleitungen und Neuindexierung.",
           "Wettbewerbsfähige Keywords von Seite 3 auf Seite 1 verbessert — \"dentist in Dubai\" von Platz 28 auf 8, \"dental clinic Dubai\" von Platz 31 auf 9.",
           "Organische Klicks innerhalb von 6 Monaten um 142 % und Impressionen um 186 % gesteigert, verifiziert in der Google Search Console.",
+          "Technisches SEO-Audit durchgeführt, das Meta-Optimierung, interne Verlinkung und mobile Optimierung wichtiger Seiten umfasste.",
         ],
       },
       {
@@ -161,6 +160,7 @@ export const de: Translation = {
           "Individuelle WordPress-Website erstellt und eine Domain-Migration (.com → .ae) mit einer vollständigen lokalen SEO-Strategie durchgeführt.",
           "Platz 1 bei Google für zentrale Marken-Keywords sowie Top-10-Platzierungen für \"salon in Dubai\" und \"beauty salon in Dubai\" erreicht.",
           "Organische Klicks um 127 % und Impressionen um 212 % innerhalb von 6 Monaten gesteigert, was sich direkt auf Terminbuchungen auswirkte.",
+          "Laufende SEO-Betreuung, Social-Media-Redaktionspläne und Community-Management zur Sicherung von Markenwachstum und Kundenbindung.",
         ],
       },
       {
@@ -171,6 +171,7 @@ export const de: Translation = {
           "Instagram des Salons durch eine hochwertige Markenidentität, Content-Säulen und Reels von 0 auf über 21.700 Follower ausgebaut.",
           "Meta-Ads- und Google-Ads-Kampagnen verwaltet und durch Segmentierung sowie Budgetoptimierung eine Steigerung der Lead-Generierung um 30 % erzielt.",
           "GA4 zur Analyse des Nutzerverhaltens und der Funnel-Abbrüche eingesetzt und Targeting sowie Landingpages zur Steigerung der Conversion-Rate optimiert.",
+          "Verantwortung für Website-UX, Medienbibliothek und Markenkonsistenz über alle digitalen Kanäle hinweg übernommen.",
         ],
       },
     ],
@@ -179,12 +180,14 @@ export const de: Translation = {
   certifications: {
     tag: "Nachweise",
     heading: "Zertifizierungen",
-    intro: "Formale Schulungen und Zertifizierungen in Paid Media, SEO, KI, Cybersicherheit und kreativen Tools.",
+    intro: "Formale Schulungen und Zertifizierungen in Paid Media, SEO, digitalem Marketing, KI & Automatisierung, Cybersicherheit und kreativen Tools.",
     viewFull: "Vollständiges Zertifikat ansehen",
     verify: "Zertifikat verifizieren",
     issued: "Ausgestellt",
     expires: "Gültig bis",
     credentialId: "Zertifikat-ID",
+    holder: "Zertifikatsinhaber",
+    viewOriginal: "Originalzertifikat (PDF)",
     skillsCovered: "Vermittelte Fähigkeiten",
     close: "Schließen",
     categories: {
@@ -206,7 +209,7 @@ export const de: Translation = {
     tag: "Kontakt",
     heading: "Lass uns etwas Großartiges erschaffen",
     description:
-      "Ich stehe weltweit für Projekte in den Bereichen KI-Automatisierung, SEO, Performance-Marketing und Webentwicklung zur Verfügung.",
+      "Ich stehe weltweit für Projekte in den Bereichen Performance-Marketing, SEO, Paid Media und Marketing-Automatisierung zur Verfügung.",
     emailMe: "E-Mail senden",
     callMe: "Anrufen",
     linkedin: "LinkedIn",
@@ -216,7 +219,7 @@ export const de: Translation = {
   footer: {
     ctaHeading: "Haben Sie ein Projekt im Kopf?",
     ctaButton: "Lass uns sprechen",
-    tagline: "KI-Automatisierungsarchitekt • SEO-Stratege • Performance-Marketing",
+    tagline: "Digital- & Performance-Marketing • SEO • Paid Media • Marketing-Automatisierung",
     linkAbout: "Über mich",
     linkProjects: "Projekte",
     linkSkills: "Fähigkeiten",
@@ -260,11 +263,11 @@ export const de: Translation = {
         "Social-Media-Wachstum und Paid-Media-Management für einen Beauty-Salon in Dubai — Instagram von 0 auf über 21.700 Follower ausgebaut, bei gleichzeitiger Steigerung der Lead-Generierung um 30 %.",
       tags: ["Instagram-Wachstum", "Meta Ads", "Google Ads"],
     },
-    "ardon-group": {
-      category: "Webentwicklung",
+    lahthaty: {
+      category: "Website-Entwicklung, SEO & Tracking",
       description:
-        "Eine Luxusimmobilien-Website, von Grund auf mit Next.js, TypeScript und Tailwind CSS entwickelt, mit individuellen Cursor-Interaktionen und scroll-gesteuerten Animationen.",
-      tags: ["Next.js", "TypeScript", "Tailwind CSS"],
+        "Website-Entwicklung, On-Page- und technisches SEO sowie Einrichtung von Meta Pixel, GA4, Search Console und Tag Manager für lahthaty.com, eine Plattform für Events und Hochzeiten im Irak.",
+      tags: ["Webentwicklung", "Technisches SEO", "GA4 & GTM"],
     },
     "ai-automation": {
       category: "KI-Automatisierung — in Entwicklung",
@@ -300,6 +303,8 @@ export const de: Translation = {
     inDevelopment: "In Entwicklung",
     dubaiUae: "Dubai, VAE",
     present: "heute",
+    websiteLabel: "Website",
+    visitWebsite: "Website besuchen",
   },
 
   caseStudies: {
@@ -460,28 +465,36 @@ export const de: Translation = {
         "Ich entwickle Markenidentität, Content-Systeme und Paid-Media-Strategien für Unternehmen, die ihr Publikum von Grund auf aufbauen müssen.",
     },
 
-    "ardon-group": {
-      metaTitle: "Fallstudie Ardon Group",
+    lahthaty: {
+      metaTitle: "Fallstudie Lahthaty",
       metaDescription:
-        "Eine Luxusimmobilien-Website, von Grund auf mit Next.js, TypeScript und Tailwind CSS entwickelt, mit individuellen Cursor-Interaktionen und scroll-gesteuerten Animationen.",
+        "Website-Entwicklung, SEO und Tracking für lahthaty.com — Seitenstruktur, Ladezeit und mobile Optimierung, On-Page- und technisches SEO sowie Einrichtung von Meta Pixel, GA4, Search Console und Tag Manager.",
       lead:
-        "Eine Luxusimmobilien-Website, komplett von Grund auf entwickelt — kein Template, kein Page-Builder — mit Next.js, TypeScript und Tailwind CSS.",
-      roleValue: "Webentwickler",
+        "Website-Entwicklung, SEO und Tracking für lahthaty.com, eine Plattform für Events und Hochzeiten im Irak — Verbesserung der Website selbst, Aufbau ihrer Suchmaschinen-Grundlage und Einrichtung der Messung.",
+      roleValue: "Website-Entwicklung, SEO & Tracking",
       yearValue: "2026",
-      stackValue: "Next.js · TypeScript · Tailwind CSS",
-      overviewHeading: "Eine individuelle Entwicklung, kein Template",
+      stackValue: "SEO · Meta Pixel · GA4 · GTM",
+      challengeTag: "Die Herausforderung",
+      overviewHeading: "Website, Sichtbarkeit und Messbarkeit verbessern",
       overviewText:
-        "Eine Luxusimmobilien-Website, komplett von Grund auf mit Next.js, TypeScript und Tailwind CSS entwickelt — inklusive individueller Cursor-Interaktionen und scroll-gesteuerter Animationen, statt aus einem bestehenden Template oder Page-Builder zusammengesetzt.",
-      featuresTag: "Was gebaut wurde",
-      featuresHeading: "Wichtigste Merkmale",
-      features: [
-        "Von Grund auf entwickelt — kein Template oder Page-Builder.",
-        "Individuelle Cursor-Interaktionen.",
-        "Scroll-gesteuerte Animationen.",
+        "Lahthaty (لحظاتي) ist eine Plattform, auf der Nutzer im Irak Veranstaltungsorte, Fotografie, Catering und weitere Event-Dienstleistungen vergleichen können. Ziel der Arbeit war es, Seitenstruktur, Ladezeit und mobile Darstellung zu verbessern, eine On-Page- und technische SEO-Grundlage für mehr organische Sichtbarkeit zu schaffen und Conversion-Tracking sowie Analytics für datengestütztes Reporting und Meta-Ads-Retargeting einzurichten.",
+      roleTag: "Meine Rolle",
+      roleHeading: "Was ich umgesetzt habe",
+      roleText: "Ich habe die Website durchgängig entwickelt und optimiert und die SEO-Strategie sowie das Tracking-Setup verantwortet.",
+      deliverables: [
+        "Die Website lahthaty.com durchgängig entwickelt und optimiert — mit verbesserter Seitenstruktur, Ladezeit und mobiler Darstellung für eine bessere Nutzererfahrung.",
+        "Eine On-Page- und technische SEO-Strategie umgesetzt — Keyword-Optimierung, Meta-Tags, Schema-Markup und interne Verlinkung — für mehr organische Sichtbarkeit.",
+        "Das Meta (Facebook) Pixel installiert und konfiguriert, um Conversion-Tracking und Retargeting-Zielgruppen für Meta-Ads-Kampagnen zu ermöglichen.",
+        "Google Analytics 4 (GA4), Google Search Console und Google Tag Manager für Performance-Tracking und datengestütztes Reporting eingebunden.",
       ],
-      tools: ["Next.js", "TypeScript", "Tailwind CSS"],
-      ctaHeading: "Benötigen Sie eine individuell entwickelte Website statt eines Templates?",
-      ctaText: "Ich entwickle produktionsreife Websites von Grund auf mit Next.js und Astro, wenn ein Template nicht das leisten kann, was eine Marke tatsächlich braucht.",
+      tools: ["Webentwicklung", "Technisches SEO", "Schema-Markup", "Meta Pixel", "Google Analytics 4", "Google Search Console", "Google Tag Manager"],
+      galleryIntro: "Screenshots der Startseite der Live-Website lahthaty.com, aufgenommen im September 2026.",
+      gallery: [
+        { label: "Startseite — Desktop" },
+        { label: "Startseite — Mobil" },
+      ],
+      ctaHeading: "Brauchen Sie eine Website, die gefunden und gemessen werden kann?",
+      ctaText: "Ich entwickle und optimiere Websites mit SEO und Tracking von Anfang an — damit Performance gemessen statt geschätzt wird.",
     },
 
     "ai-automation": {

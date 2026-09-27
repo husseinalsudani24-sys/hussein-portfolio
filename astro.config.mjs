@@ -6,7 +6,7 @@ import react from '@astrojs/react';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://yourwebsite.com',
+  site: 'https://hussein-portfolio-xi.vercel.app',
   i18n: {
     defaultLocale: 'en',
     locales: ['en', 'ar', 'de'],

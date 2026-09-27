@@ -14,8 +14,8 @@ interface Props {
 }
 
 const {
-  title = "Hussein Al Sudani | AI Automation Architect",
-  description = "AI Automation Architect, SEO Strategist and Performance Marketing specialist based in Dubai, UAE.",
+  title = "Hussein Al Sudani | Digital & Performance Marketing Specialist",
+  description = "Digital & Performance Marketing Specialist in Dubai, UAE — SEO, paid media and marketing automation.",
   path = "/",
 } = Astro.props;
 
@@ -45,7 +45,7 @@ const personSchema = {
     "@type": "PostalAddress",
     addressLocality: portfolio.personal.location,
   },
-  sameAs: [portfolio.personal.linkedin, portfolio.personal.github],
+  sameAs: [portfolio.personal.linkedin, portfolio.personal.github, portfolio.personal.instagram],
   ...(ogImageURL ? { image: ogImageURL.toString() } : {}),
 };
 ---

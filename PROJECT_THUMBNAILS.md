@@ -53,16 +53,6 @@ portfolio's own CSS/gradient system.
   illustration in the project's pink/violet brand colors with soft organic
   (non-technical) shapes appropriate to a beauty brand.
 
-## Ardon Group — abstract cover (no official site found)
-
-- Multiple targeted searches (as a Dubai luxury real estate developer, as a
-  Next.js client project, by name alone) returned no verifiable official
-  website for this client.
-- No screenshot was taken or guessed. The cover is a premium abstract
-  gradient-mesh illustration in the project's violet/cyan brand colors with
-  a structured architectural line-grid motif (fitting a real-estate/dev
-  case study without implying a specific unverified site).
-
 ## AI Lead-Capture Automation — abstract illustration (by design)
 
 - Internal, in-progress automation project with no public product to
@@ -71,9 +61,25 @@ portfolio's own CSS/gradient system.
   amber/violet brand colors — nodes and connecting lines suggesting
   automation/data flow, no robots, brains, code, or holograms.
 
+## Lahthaty — real screenshot (plain, not composited)
+
+- Official site verified: `https://lahthaty.com/index.php` (HTTP 200 on
+  2026-09-27; homepage headline "لحظاتي - تنظيم المناسبات والأعراس في العراق").
+- Captured with Playwright (system Chrome) after every above-the-fold image
+  had finished loading:
+  - Desktop: 1440×900 @2x → card cover `public/images/projects/lahthaty.webp`
+    (top crop, 1600×760) and gallery `public/images/projects/lahthaty/desktop.webp`
+    (1600×1000).
+  - Mobile: Pixel 7 emulation → gallery `public/images/projects/lahthaty/mobile.webp`
+    (540 px wide).
+- Unlike the other six covers, this one is the raw capture with no brand wash,
+  grain or glass overlay. The client's Instagram post designs were
+  deliberately not used, because they show social content rather than the
+  website, SEO and tracking work this case study covers.
+
 ## Build pipeline
 
-All six covers share one composition system (dark scrim, brand-color wash,
+The six original covers share one composition system (dark scrim, brand-color wash,
 film-grain texture, glass corner accent) rendered via a local HTML/CSS
 template driven by Playwright at 1600×760 @2x, then encoded to WebP
 (`libwebp`, quality 82) — final files are 9–53 KB each. Source assets and the

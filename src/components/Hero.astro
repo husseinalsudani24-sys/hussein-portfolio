@@ -120,16 +120,6 @@ const trustCompanies = portfolio.companies.slice(0, 4);
             <span>{t.hero.statYears}</span>
           </div>
 
-          <div class="hero-float-card hero-float-card-projects">
-            <strong class="count-up" data-count-to="30" data-suffix="+">0</strong>
-            <span>{t.hero.statProjects}</span>
-          </div>
-
-          <div class="hero-float-card hero-float-card-automations">
-            <strong class="count-up" data-count-to="100" data-suffix="+">0</strong>
-            <span>{t.hero.statAutomations}</span>
-          </div>
-
         </div>
 
       </div>
@@ -647,12 +637,8 @@ const trustCompanies = portfolio.companies.slice(0, 4);
        page's own gutter (see .container in global.css), never the
        viewport edge itself. */
     .hero-float-card-years{ top:2%; left:-6%; }
-    .hero-float-card-projects{ bottom:12%; right:-8%; }
-    .hero-float-card-automations{ bottom:-4%; left:6%; }
 
     :global([dir="rtl"]) .hero-float-card-years{ left:auto; right:-6%; }
-    :global([dir="rtl"]) .hero-float-card-projects{ right:auto; left:-8%; }
-    :global([dir="rtl"]) .hero-float-card-automations{ left:auto; right:6%; }
 
 }
 
@@ -677,7 +663,7 @@ const trustCompanies = portfolio.companies.slice(0, 4);
         gap:24px;
     }
 
-    /* The same three cards that float around the portrait on desktop
+    /* The same stat card(s) that float around the portrait on desktop
        become a plain, safely-contained row underneath it here — no
        negative percentage offsets, so nothing can bleed past the
        viewport edge (the bug this replaces: at narrow widths those same
